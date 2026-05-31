@@ -20,10 +20,14 @@
     background-color: #ffffff !important;
   }
 
-  /* Force background colors to print correctly */
+  /* Force background colors and prevent forced page breaks */
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
+    page-break-before: auto !important;
+    page-break-after: auto !important;
+    break-before: auto !important;
+    break-after: auto !important;
   }
 
   .no-print {

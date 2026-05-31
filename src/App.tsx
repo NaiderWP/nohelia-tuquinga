@@ -12,8 +12,7 @@ import {
   Facebook,
   Linkedin,
   Twitter,
-  Instagram,
-  Download
+  Instagram
 } from 'lucide-react';
 
 import InteractiveMindMap from './components/InteractiveMindMap';
@@ -25,84 +24,12 @@ import GlossaryView from './components/GlossaryView';
 
 export default function App() {
   const [activeTOC, setActiveTOC] = useState<string>('');
-  const [showPrintAdvice, setShowPrintAdvice] = useState<boolean>(false);
-
-  const triggerPrint = () => {
-    setShowPrintAdvice(true);
-    setTimeout(() => {
-      setShowPrintAdvice(false);
-    }, 9000);
-    window.print();
-  };
-
-  const saveAsHTML = () => {
-    // Collect styling links and rules
-    const styles = Array.from(document.querySelectorAll('style, link[rel="stylesheet"]'))
-      .map(el => el.outerHTML)
-      .join('\n');
-    
-    // Get the inner HTML from the main compendium layout
-    const mainContent = document.getElementById('compendium-main-content')?.innerHTML || document.body.innerHTML;
-    
-    const fullHTML = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>E-Learning Systems: Types, Trends, and Educational Platforms</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <style>
-    body {
-      font-family: "Roboto", "Calibri", "Arial", sans-serif;
-      background-color: #f8fafc;
-      color: #333333;
-    }
-    .font-display {
-      font-family: "Space Grotesk", sans-serif;
-    }
-    .font-mono {
-      font-family: "JetBrains Mono", monospace;
-    }
-    @media print {
-      .no-print { display: none !important; }
-      body { background-color: white !important; color: black !important; }
-    }
-    /* Force exact colors when saving as offline HTML */
-    * {
-      -webkit-print-color-adjust: exact !important;
-      print-color-adjust: exact !important;
-    }
-  </style>
-  \${styles}
-</head>
-<body class="bg-slate-50">
-  <div class="max-w-4xl mx-auto bg-white shadow-xl min-h-screen border-x border-slate-200/50">
-    \${mainContent}
-  </div>
-</body>
-</html>`;
-
-    const blob = new Blob([fullHTML], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `E-Learning_Systems_Compendium_Nohelia_Dayanna_Tuquinga.html`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  };
 
   const socialNetworks = [
     {
       platform: 'Facebook',
       bestFor: 'Communities of practice and social forums',
-      learningUse: 'Enables sharing of interactive academic announcements in mass, energizes closed asynchronous debate groups, and connects students across cross-disciplinary teamwork projects.',
+      learningUse: 'Enables sharing of academic announcements in mass, energizes closed asynchronous debate groups, and connects students across cross-disciplinary teamwork projects.',
       icon: Facebook,
       color: 'text-blue-600 bg-blue-50 border-blue-100'
     },
@@ -185,18 +112,39 @@ export default function App() {
     }
   ];
 
-  const qrs = [
-    { topic: 'Topic 1.1', type: 'Self-assessment quiz', targetUrl: 'https://forms.gle/unemi-elearning-quiz-1', label: 'Learning Theories Quiz' },
-    { topic: 'Topic 1.2', type: 'Instructional video tutorial', targetUrl: 'https://youtube.com/watch?v=unemi-elearning-tutorial', label: 'Pedagogical Design Tutorial' },
-    { topic: 'Topic 1.3', type: 'Augmented Reality experience', targetUrl: 'https://unemi.edu.ec/elearning/ar-gallery', label: 'AR Resources Gallery' },
-    { topic: 'Topic 1.4', type: 'Padlet discussion board', targetUrl: 'https://padlet.com/unemi/elearning-discussion', label: 'Social Networks Discussion' },
-    { topic: 'Topic 2.1', type: 'U-Learning video seminar', targetUrl: 'https://youtube.com/watch?v=unemi-ulearning', label: 'U-Learning Library' },
-    { topic: 'Topic 2.2', type: 'Agile dashboard mockup', targetUrl: 'https://proofhub.com/unemi-elearning-tasks', label: 'ProofHub Academic Panel' },
-    { topic: 'Topic 2.3', type: 'Comparison matrix', targetUrl: 'https://unemi.edu.ec/elearning/lms-compare', label: 'LMS Platform Analysis' },
+  const interactiveActivities = [
+    {
+      topic: 'Unit 1 End',
+      type: 'External Google Forms Work',
+      targetUrl: 'https://forms.gle/XHFbdYtf8crUYDcn6',
+      label: 'Unit 1 – Student Answer Link',
+      isExternal: true
+    },
+    {
+      topic: 'Unit 2 End',
+      type: 'External Google Forms Work',
+      targetUrl: 'https://forms.gle/XUkNHQG6PLJB8yUj6',
+      label: 'Unit 2 – Student Answer Link',
+      isExternal: true
+    },
+    {
+      topic: 'Topic 1.2',
+      type: 'Interactive Practical Panel',
+      targetUrl: '#instructor-roles',
+      label: 'The 8 Roles of an Online Instructor',
+      isExternal: false
+    },
+    {
+      topic: 'Unit 2 End',
+      type: 'Self-Check Mastery Board',
+      targetUrl: '#lessons-learned',
+      label: 'Executive Wrap-up & Reflections',
+      isExternal: false
+    }
   ];
 
-  function QRCodeElement({ endpoint, textLabel }: { endpoint: string; textLabel: string }) {
-    const qrSource = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=004080&data=${encodeURIComponent(endpoint)}`;
+  function QRCodeElement({ endpoint, textLabel, primaryColor = "004080" }: { endpoint: string; textLabel: string; primaryColor?: string }) {
+    const qrSource = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&color=${primaryColor}&data=${encodeURIComponent(endpoint)}`;
     return (
       <div className="flex flex-col items-center bg-slate-50 border border-slate-100 p-4 rounded-xl text-center shadow-xs page-break-inside-avoid print-mx-0">
         <img
@@ -205,14 +153,15 @@ export default function App() {
           className="w-28 h-28 border border-slate-200 p-1 bg-white rounded-lg shadow-inner"
           referrerPolicy="no-referrer"
         />
-        <p className="text-xs font-bold text-[#004080] mt-3 tracking-wide uppercase font-sans">
+        <p className="text-xs font-bold mt-3 tracking-wide uppercase font-sans" style={{ color: `#${primaryColor}` }}>
           {textLabel}
         </p>
         <a
           href={endpoint}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] text-[#FF6600] font-mono hover:underline mt-1 truncate max-w-[150px] inline-block no-print"
+          className="text-[10px] font-mono hover:underline mt-1 truncate max-w-[150px] inline-block no-print"
+          style={{ color: primaryColor === "8e24aa" ? "#8e24aa" : "#FF6600" }}
         >
           {endpoint}
         </a>
@@ -222,46 +171,11 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-[#333333] font-sans antialiased selection:bg-orange-500 selection:text-white print:bg-white print:text-black">
-      {/* Visual notice about PDF print constraints inside sandboxed frames */}
-      {showPrintAdvice && (
-        <div className="fixed top-6 left-4 right-4 md:left-1/2 md:right-auto md:transform md:-translate-x-1/2 z-50 bg-[#004080] text-white px-6 py-4 rounded-xl shadow-2xl border border-blue-900/40 flex items-start gap-3 animate-bounce no-print max-w-md">
-          <Printer className="w-5 h-5 text-orange-400 shrink-0 mt-0.5 animate-pulse" />
-          <div className="space-y-1.5">
-            <p className="text-xs font-bold text-orange-300 uppercase tracking-wider font-display">Print Dialog Triggered</p>
-            <p className="text-xs text-slate-100 leading-normal">
-              If your browser's PDF Print window is blocked by the viewer's security sandbox, you can:
-            </p>
-            <ol className="text-[11px] text-slate-200 list-decimal pl-4 space-y-1 font-sans">
-              <li>Click <strong className="text-white">"Open in New Tab"</strong> in the top-right corner, then Print again.</li>
-              <li>Click the <strong className="text-white">"Save Offline HTML"</strong> button to download a static, editable copy immediately.</li>
-            </ol>
-          </div>
-        </div>
-      )}
-
-      {/* Dynamic Back-to-Top and Instant Print FAB for desktop experience (hidden on print) */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50 no-print animate-fade-in" id="custom-action-controls">
-        <button
-          onClick={saveAsHTML}
-          className="bg-[#004080] text-white hover:bg-blue-800 font-bold px-5 py-3 rounded-full shadow-lg flex items-center gap-2 cursor-pointer transition-all duration-300 transform hover:scale-105 active:scale-95 border border-blue-900/30"
-          title="Save as Standalone Offline HTML File"
-          id="html-btn"
-        >
-          <Download className="w-5 h-5 text-orange-400 shrink-0" />
-          <span className="text-sm">Save Offline HTML</span>
-        </button>
-        <button
-          onClick={triggerPrint}
-          className="bg-[#FF6600] text-white hover:bg-orange-600 font-bold px-5 py-3 rounded-full shadow-lg flex items-center gap-2 cursor-pointer transition-all duration-300 transform hover:scale-105 active:scale-95"
-          title="Save as PDF / Print Book"
-          id="print-btn"
-        >
-          <Printer className="w-5 h-5 shrink-0" />
-          <span className="text-sm">Print eBook PDF</span>
-        </button>
+      {/* Dynamic Back-to-Top FAB for desktop experience (hidden on print) */}
+      <div className="fixed bottom-6 right-6 z-50 no-print animate-fade-in" id="custom-action-controls">
         <button
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="bg-white text-slate-700 hover:text-slate-900 border border-slate-200 p-3.5 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 transform hover:scale-105 mx-auto"
+          className="bg-[#004080] text-white hover:bg-blue-800 p-3.5 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 transform hover:scale-105"
           title="Scroll to Top"
           id="scroll-top-btn"
         >
@@ -275,26 +189,10 @@ export default function App() {
         {/* ==============================================
             SECTION 1: COVER PAGE
             ============================================== */}
-        <section id="cover-page" className="py-12 px-8 md:px-16 min-h-[95vh] flex flex-col justify-between page-break-after border-b-4 border-[#004080]/30 relative overflow-hidden bg-gradient-to-b from-[#E6F0FA]/20 to-white">
+        <section id="cover-page" className="py-12 px-8 md:px-16 min-h-[95vh] flex flex-col justify-between border-b-4 border-[#004080]/30 relative overflow-hidden bg-gradient-to-b from-[#E6F0FA]/20 to-white">
           {/* Cover Watermark Pattern */}
           <div className="absolute top-0 right-0 w-96 h-96 bg-[#004080]/3 rounded-full blur-3xl -z-10" />
           <div className="absolute bottom-0 left-0 w-72 h-72 bg-[#FF6600]/3 rounded-full blur-3xl -z-10" />
-
-          {/* Institutional Block */}
-          <div className="flex items-center justify-between border-b border-slate-150 pb-6">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-[#004080] text-white flex items-center justify-center rounded-xl font-bold text-xl shadow-md border-b-2 border-orange-500 font-display">
-                U
-              </div>
-              <div>
-                <p className="font-extrabold text-lg text-[#004080] uppercase tracking-wide font-display">UNEMI</p>
-                <p className="text-[10px] font-semibold text-slate-500 uppercase tracking-widest">State University of Milagro</p>
-              </div>
-            </div>
-            <span className="text-xs font-mono font-bold text-slate-400 border border-slate-200 px-3 py-1 rounded-full bg-white shadow-xs">
-              Self-Instructional Module
-            </span>
-          </div>
 
           {/* Title & Subtitle Area */}
           <div className="my-10 space-y-4">
@@ -332,7 +230,7 @@ export default function App() {
         {/* ==============================================
             SECTION 2: TABLE OF CONTENTS (MANUAL ANCHORS)
             ============================================== */}
-        <section id="table-of-contents" className="py-12 px-8 md:px-16 page-break-after border-b border-slate-150 bg-slate-50/30">
+        <section id="table-of-contents" className="py-12 px-8 md:px-16 border-b border-slate-150 bg-slate-50/30">
           <div className="bg-white rounded-2xl border-2 border-[#004080]/15 p-6 shadow-md print-border">
             <div className="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
               <BookOpen className="w-6 h-6 text-[#004080]" />
@@ -530,17 +428,7 @@ export default function App() {
               />
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">Synchronous Activity</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">Digital Self-Assessment Quiz</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code on the right with your phone or click the link to load our learning theories evaluation form and track your pedagogical progress.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://forms.gle/unemi-elearning-quiz-1" textLabel="ICTs Assessment 1.1" />
-            </div>
+
           </div>
 
           {/* TOPIC 1.2 */}
@@ -580,7 +468,7 @@ export default function App() {
             </div>
 
             {/* 8 Online Instructor Roles Diagram */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
+            <div id="instructor-roles" className="scroll-mt-12 my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
               <img
                 src="/online_instructor_8_roles.png"
                 alt="The 8 Multifaceted Roles of the Online Instructor: Technical, Pedagogical, and Managerial"
@@ -615,17 +503,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">Practical Activity</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">Instructional Design Video Tutorial</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code or click the active link below to open an instructional design strategy video, breaking down modern virtual curriculum planning.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://youtube.com/watch?v=unemi-elearning-tutorial" textLabel="Pedagogical Design Tutorial" />
-            </div>
+
           </div>
 
           {/* TOPIC 1.3 */}
@@ -670,17 +548,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">Hypermedia Gallery</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">AR and Virtual Inmersive Assets</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code to load a selected library of augmented reality resources built for biology, chemistry, and mechanics educational testing.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://unemi.edu.ec/elearning/ar-gallery" textLabel="AR Resources Gallery" />
-            </div>
+
           </div>
 
           {/* TOPIC 1.4 */}
@@ -760,16 +628,19 @@ export default function App() {
               </div>
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Unit 1 - Student Answer Link Google Forms Block */}
+            <div className="bg-purple-50/50 rounded-xl border-2 border-purple-200 p-6 flex flex-col md:flex-row items-center justify-between gap-6 page-break-inside-avoid shadow-xs">
               <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">Joint Board</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">Collaborative Padlet discussion board</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code to enter our student board sharing asynchronous thoughts on virtual Netiquette and digital responsibility.
+                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full border border-purple-200 inline-flex items-center gap-1.5 font-mono">
+                  <FileText className="w-3.5 h-3.5 text-purple-700" />
+                  <span>Google Forms Activity</span>
+                </span>
+                <h4 className="text-xl font-extrabold text-purple-950 font-display">Unit 1 – Student Answer Link</h4>
+                <p className="text-sm text-slate-600 max-w-md leading-relaxed">
+                  Submit your responses, assessments, and learning journal entries for Unit 1. Scan the QR code or click the active link to open our verified Google Forms workbook.
                 </p>
               </div>
-              <QRCodeElement endpoint="https://padlet.com/unemi/elearning-discussion" textLabel="Social Networks Discussion" />
+              <QRCodeElement endpoint="https://forms.gle/XHFbdYtf8crUYDcn6" textLabel="Unit 1 Google Form" primaryColor="8e24aa" />
             </div>
           </div>
         </section>
@@ -777,7 +648,7 @@ export default function App() {
         {/* ==============================================
             SECTION 4: UNIT 2
             ============================================== */}
-        <section id="unit-2" className="py-12 px-8 md:px-16 border-b border-slate-150 relative page-break-before">
+        <section id="unit-2" className="py-12 px-8 md:px-16 border-b border-slate-150 relative">
           {/* Unit Heading */}
           <div className="bg-[#E6F0FA] text-[#004080] border-l-8 border-[#004080] p-6 rounded-r-xl mb-8 shadow-sm">
             <p className="text-xs font-bold uppercase tracking-widest font-mono text-slate-500">UNIT TWO</p>
@@ -854,17 +725,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">Video Seminar</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">The Foundations of U-Learning</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code to watch a concise, expert explanation detailing how smart sensors and IoT interfaces expand formal studies into daily routines.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://youtube.com/watch?v=unemi-ulearning" textLabel="U-Learning Library" />
-            </div>
+
           </div>
 
           {/* TOPIC 2.2 */}
@@ -941,17 +802,7 @@ export default function App() {
               </div>
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
-              <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">Management Flow</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">Operational Tasks Dashboard Mockup</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code to review a robust interactive team dashboard laying out milestones, timelines, and course delivery task-boards for academic departments.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://proofhub.com/unemi-elearning-tasks" textLabel="ProofHub Academic Panel" />
-            </div>
+
           </div>
 
           {/* TOPIC 2.3 */}
@@ -1066,16 +917,19 @@ export default function App() {
               </div>
             </div>
 
-            {/* Interactive QR Block */}
-            <div className="bg-slate-50 rounded-xl border border-slate-150 p-6 flex flex-col md:flex-row items-center justify-between gap-6">
+            {/* Unit 2 - Student Answer Link Google Forms Block */}
+            <div className="bg-purple-50/50 rounded-xl border-2 border-purple-200 p-6 flex flex-col md:flex-row items-center justify-between gap-6 page-break-inside-avoid shadow-xs">
               <div className="space-y-2">
-                <span className="text-[10px] font-bold uppercase tracking-wider bg-orange-100 text-[#FF6600] px-2.5 py-0.5 rounded-full border border-orange-200">System Study</span>
-                <h4 className="text-lg font-bold text-[#004080] font-display">Comprehensive LMS Matrix</h4>
-                <p className="text-sm text-slate-500 max-w-md h-auto leading-relaxed">
-                  Scan the QR code to open an empirical analysis analyzing and rating Moodle, Canvas, Blackboard, and Chamilo across custom criteria.
+                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full border border-purple-200 inline-flex items-center gap-1.5 font-mono">
+                  <FileText className="w-3.5 h-3.5 text-purple-700" />
+                  <span>Google Forms Activity</span>
+                </span>
+                <h4 className="text-xl font-extrabold text-purple-950 font-display">Unit 2 – Student Answer Link</h4>
+                <p className="text-sm text-slate-600 max-w-md leading-relaxed">
+                  Submit your responses, assessments, and learning journal entries for Unit 2. Scan the QR code or click the active link to open our verified Google Forms workbook.
                 </p>
               </div>
-              <QRCodeElement endpoint="https://unemi.edu.ec/elearning/lms-compare" textLabel="LMS Platform Analysis" />
+              <QRCodeElement endpoint="https://forms.gle/XUkNHQG6PLJB8yUj6" textLabel="Unit 2 Google Form" primaryColor="8e24aa" />
             </div>
           </div>
         </section>
@@ -1083,7 +937,7 @@ export default function App() {
         {/* ==============================================
             SECTION 5: INTEGRAL LESSONS LEARNED SECTION
             ============================================== */}
-        <section id="lessons-learned" className="py-12 px-8 md:px-16 border-b border-slate-150 bg-slate-50/50 page-break-before">
+        <section id="lessons-learned" className="py-12 px-8 md:px-16 border-b border-slate-150 bg-slate-50/50">
           <div className="bg-[#E6F0FA] border-2 border-[#004080] rounded-3xl p-8 shadow-md print-border print-shadow-none">
             <div className="flex items-center gap-3 border-b border-[#004080]/20 pb-4 mb-6">
               <CheckCircle2 className="w-7 h-7 text-[#004080]" />
@@ -1163,7 +1017,7 @@ export default function App() {
         {/* ==============================================
             SECTION 6: ANNEXES / GLOSSARY / READINGS
             ============================================== */}
-        <section id="annexes" className="py-12 px-8 md:px-16 page-break-before leading-relaxed">
+        <section id="annexes" className="py-12 px-8 md:px-16 leading-relaxed">
           <div className="bg-white border-l-8 border-[#004080] p-4 rounded-r-xl mb-10 shadow-xs">
             <p className="text-xs font-bold uppercase tracking-widest font-mono text-slate-500 font-semibold">REFERENCE APPENDIX</p>
             <h1 className="text-3xl font-extrabold text-[#004080] font-display tracking-tight">Academic Annexes</h1>
@@ -1241,7 +1095,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* QR Codes Summary table */}
+          {/* Interactive Activities Summary table */}
           <div id="interactive-index" className="mb-8 scroll-mt-6 page-break-inside-avoid">
             <h3 className="text-2xl font-extrabold text-[#004080] font-display mb-6 pb-2 border-b border-slate-100 flex items-center gap-2">
               <span className="bg-[#004080] text-white w-2 h-6 rounded-md shrink-0" />
@@ -1249,38 +1103,53 @@ export default function App() {
             </h3>
 
             <p className="text-sm text-slate-500 mb-4 italic leading-relaxed">
-              Consolidated library of classroom activities mapped by QR codes in this compendium. If printing this book on physical paper (Ctrl+P), you can easily scan the QR markers with a phone camera to launch these external elements:
+              Consolidated catalog of practical workbook exercises and deep-dive interactive components. If printing this compendium (Ctrl+P), you can scan QR codes for external assessments or follow internal bookmarks for curated in-document panels:
             </p>
 
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm print-border">
               <table className="w-full font-sans text-left border-collapse">
                 <thead>
                   <tr className="bg-[#004080] text-white">
-                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Syllabus Topic</th>
+                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Target / Syllabus Scope</th>
                     <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Activity Specialty</th>
-                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Destination Link & marker</th>
+                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Destination Connection</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-sm h-auto leading-relaxed">
-                  {qrs.map((qr, qIdx) => (
-                    <tr key={qIdx} className="hover:bg-slate-50/30">
+                  {interactiveActivities.map((act, aIdx) => (
+                    <tr key={aIdx} className="hover:bg-slate-50/30">
                       <td className="py-3 px-4 font-bold text-[#004080]">
-                        {qr.topic}
+                        {act.topic}
                       </td>
                       <td className="py-3 px-4 text-slate-600 font-medium text-xs">
-                        {qr.type}
+                        {act.type}
                       </td>
-                      <td className="py-3 px-4 text-[#FF6600] font-semibold text-xs">
+                      <td className="py-3 px-4 text-xs font-semibold">
                         <div className="flex items-center gap-2">
-                          <a
-                            href={qr.targetUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:underline hover:text-orange-700 font-mono truncate max-w-[200px]"
-                          >
-                            {qr.label}
-                          </a>
-                          <ExternalLink className="w-3.5 h-3.5 text-slate-300 no-print shrink-0" />
+                          {act.isExternal ? (
+                            <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md border border-purple-100 text-xs shadow-3xs animate-pulse">
+                              <FileText className="w-3.5 h-3.5 text-purple-700" />
+                              <a
+                                href={act.targetUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="hover:underline font-bold"
+                              >
+                                {act.label}
+                              </a>
+                              <ExternalLink className="w-3 h-3 text-purple-400 shrink-0" />
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md border border-blue-100 text-xs shadow-3xs">
+                              <BookOpen className="w-3.5 h-3.5 text-blue-700" />
+                              <a
+                                href={act.targetUrl}
+                                className="hover:underline font-bold"
+                              >
+                                {act.label}
+                              </a>
+                            </span>
+                          )}
                         </div>
                       </td>
                     </tr>
@@ -1292,7 +1161,7 @@ export default function App() {
         </section>
 
         {/* Academic Copyright and Institutional footer */}
-        <footer className="bg-[#004080] text-white/80 py-8 px-8 text-center text-xs font-sans border-t-4 border-[#FF6600] page-break-before-auto">
+        <footer className="bg-[#004080] text-white/80 py-8 px-8 text-center text-xs font-sans border-t-4 border-[#FF6600]">
           <div className="flex justify-center">
             <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 font-black text-white text-base">
               UNEMI
