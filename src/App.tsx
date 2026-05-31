@@ -337,7 +337,7 @@ export default function App() {
                 <ul className="pl-6 mt-1 space-y-1.5 border-l border-indigo-200 ml-2 text-xs font-medium text-slate-500">
                   <li><a href="#glossary" className="hover:text-[#FF6600]">• Technical Glossary of Terms</a></li>
                   <li><a href="#readings" className="hover:text-[#FF6600]">• Suggested Readings</a></li>
-                  <li><a href="#interactive-index" className="hover:text-[#FF6600]">• Interactive Activities Index (QR Codes)</a></li>
+                  <li><a href="#interactive-index" className="hover:text-[#FF6600]">• Interactive Activities Index</a></li>
                 </ul>
               </div>
             </div>
@@ -1103,7 +1103,7 @@ export default function App() {
             </h3>
 
             <p className="text-sm text-slate-500 mb-4 italic leading-relaxed">
-              Consolidated catalog of practical workbook exercises and deep-dive interactive components. If printing this compendium (Ctrl+P), you can scan QR codes for external assessments or follow internal bookmarks for curated in-document panels:
+              Consolidated catalog of practical workbook exercises and deep-dive interactive components.
             </p>
 
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm print-border">
