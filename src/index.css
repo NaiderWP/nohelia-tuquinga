@@ -1,0 +1,71 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", "Calibri", "Arial", sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-unemi-blue: #004080;
+  --color-unemi-orange: #FF6600;
+  --color-unemi-light-orange: #FFF3E0;
+  --color-unemi-light-blue: #E6F0FA;
+}
+
+/* Base resets & utilities for printing */
+@media print {
+  body {
+    font-family: "Roboto", "Calibri", "Arial", sans-serif;
+    color: #333333 !important;
+    background-color: #ffffff !important;
+  }
+
+  /* Force background colors to print correctly */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .page-break-before {
+    page-break-before: always !important;
+    break-before: page !important;
+  }
+
+  .page-break-after {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  .page-break-inside-avoid {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Clear gaps and margins for print */
+  .print-mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .print-px-0 {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .print-shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print-border {
+    border: 1px solid #e2e8f0 !important;
+  }
+}
+
+/* Ensure smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
