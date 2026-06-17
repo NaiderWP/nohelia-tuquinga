@@ -1433,10 +1433,17 @@ export default function App() {
                 className="bg-white text-[#333333] shadow-2xl border border-slate-200/40 rounded-3xl min-h-[95vh] flex flex-col justify-between p-6 sm:p-10 md:p-14 relative print:shadow-none print:border-none print:p-0 print:min-h-0"
               >
                 {/* Academic Header */}
-                <header className="border-b border-slate-100 pb-3 mb-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono tracking-wider">
-                  <span>UNEMI</span>
-                  <span className="text-unemi-blue">{currentPageData.section}</span>
-                </header>
+                {currentPageData.number > 1 && (
+                  <header className="border-b border-slate-100 pb-3 mb-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono tracking-wider">
+                    <img
+                      src="/logo_unemi.png"
+                      alt="UNEMI Logo"
+                      style={{ height: '1cm', width: 'auto' }}
+                      className="object-contain"
+                    />
+                    <span className="text-unemi-blue">{currentPageData.section}</span>
+                  </header>
+                )}
 
                 {/* Page content */}
                 <div className="grow flex flex-col justify-center py-4">
@@ -1460,10 +1467,17 @@ export default function App() {
                     className="bg-white text-[#333333] shadow-md border border-slate-200 rounded-2xl min-h-[95vh] flex flex-col justify-between p-6 sm:p-10 md:p-14 relative page-break print:m-0 print:border-none print:shadow-none print:rounded-none print:min-h-[1050px]"
                   >
                     {/* Academic Header */}
-                    <header className="border-b border-slate-100 pb-3 mb-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono tracking-wider">
-                      <span>UNEMI</span>
-                      <span className="text-unemi-blue">{p.section}</span>
-                    </header>
+                    {p.number > 1 && (
+                      <header className="border-b border-slate-100 pb-3 mb-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono tracking-wider">
+                        <img
+                          src="/logo_unemi.png"
+                          alt="UNEMI Logo"
+                          style={{ height: '1cm', width: 'auto' }}
+                          className="object-contain"
+                        />
+                        <span className="text-unemi-blue">{p.section}</span>
+                      </header>
+                    )}
 
                     {/* Page Content */}
                     <div className="grow flex flex-col justify-center py-4">
