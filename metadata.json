@@ -1,6 +1,6 @@
 {
-  "name": "Guía de Sistemas de E-Learning UNEMI",
-  "description": "Recurso de aprendizaje interactivo sobre sistemas y plataformas de e-learning (Unidades 1 y 2) para UNEMI.",
+  "name": "UNEMI E-Learning Systems Guide",
+  "description": "Interactive learning resource on e-learning systems and platforms (Units 1 and 2) for UNEMI.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

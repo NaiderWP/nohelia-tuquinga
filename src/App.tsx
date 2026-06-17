@@ -8,11 +8,19 @@ import {
   Users, 
   Printer, 
   ChevronRight,
+  ChevronLeft,
+  ChevronsLeft,
+  ChevronsRight,
   ExternalLink,
   Facebook,
   Linkedin,
   Twitter,
-  Instagram
+  Instagram,
+  Book,
+  Menu,
+  X,
+  Layers,
+  Sparkles
 } from 'lucide-react';
 
 import InteractiveMindMap from './components/InteractiveMindMap';
@@ -23,122 +31,120 @@ import InteractiveQuiz from './components/InteractiveQuiz';
 import GlossaryView from './components/GlossaryView';
 
 export default function App() {
-  const [activeTOC, setActiveTOC] = useState<string>('');
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [viewMode, setViewMode] = useState<'book' | 'scroll'>('scroll');
+  const [sidebarOpen, setSidebarOpen] = useState<boolean>(false);
 
+  // Common UI elements / data from original Compendium
   const socialNetworks = [
     {
       platform: 'Facebook',
       bestFor: 'Communities of practice and social forums',
-      learningUse: 'Enables sharing of academic announcements in mass, energizes closed asynchronous debate groups, and connects students across cross-disciplinary teamwork projects.',
+      learningUse: 'Allows massive broadcast of academic announcements, energizes closed asynchronous discussion groups, and connects students on interdisciplinary projects.',
       icon: Facebook,
-      color: 'text-blue-600 bg-blue-50 border-blue-100'
     },
     {
       platform: 'LinkedIn',
-      bestFor: 'Academic brand, employability, and professional profiles',
-      learningUse: 'Ideal for connecting university students with key industry employers, debating scientific findings of industrial relevance, and forging strong Alumni networks.',
+      bestFor: 'Academic brand, employability, and professional identity',
+      learningUse: 'Ideal for linking university students with key employers, discussing scientific relevance findings, and forging alumni networks.',
       icon: Linkedin,
-      color: 'text-blue-700 bg-blue-100 border-blue-200'
     },
     {
       platform: 'Twitter (X)',
-      bestFor: 'High-speed academic microblogging',
-      learningUse: 'Encourages agile discussions with course-specific hashtags, summarizes scientific concepts into compact threads, and tracks live worldwide academic conferences.',
+      bestFor: 'Agile academic microblogging and trend debate',
+      learningUse: 'Fosters dynamic discussions with specific course hashtags, summarizes complex scientific concepts into compact threads, and follows global conferences in real time.',
       icon: Twitter,
-      color: 'text-slate-900 bg-slate-50 border-slate-200'
     },
     {
       platform: 'Instagram',
       bestFor: 'Dynamic portfolios and purely visual storytelling',
-      learningUse: 'Utilized to document laboratory experiments through short stories, showcase high-impact student infographics, and provide a vibrant aesthetic outlet for creative projects.',
+      learningUse: 'Used to document lab experiments through short stories, showcase high-impact infographics created by students, and provide an aesthetic channel for projects.',
       icon: Instagram,
-      color: 'text-pink-600 bg-pink-50 border-pink-100'
     },
     {
-      platform: 'Edmodo / Closed Networks',
-      bestFor: 'Pedagogical collaboration within secure school circles',
-      learningUse: 'Secure, moderated networks designed to replicate social communication dynamics, submit academic assignments, and share direct feedback securely with students.',
+      platform: 'Edmodo / Classroom Networks',
+      bestFor: 'Secure pedagogical collaboration within school circles',
+      learningUse: 'Safe and moderated networks designed to replicate traditional social dynamics, provide feedback, and share course assignments.',
       icon: Users,
-      color: 'text-emerald-600 bg-emerald-50 border-emerald-100'
     }
   ];
 
   const engagementTools = [
     {
       name: 'Kahoot!',
-      type: 'Mass Gamification & Live Polls',
-      function: 'Creates game-show style interactive synchronous quizzes that dramatically energize videoconferences or physical sessions, sparking healthy competition.',
-      metrics: 'Provides real-time reports on group assimilation and generates fun, performance-based leaderboards.'
+      type: 'Mass Gamification and Live Polls',
+      function: 'Creates interactive synchronous quiz-style contests that energize video classes, sparking group integration in a gamified environment.',
+      metrics: 'Delivers real-time reports on group progress.'
     },
     {
       name: 'Google Forms',
       type: 'Structured Asynchronous Evaluations',
-      function: 'An ultra-versatile tool to construct quick quizzes, detailed diagnostic surveys, and self-grading rubrics with immediate automated teacher feedback.',
-      metrics: 'Natively connects to spreadsheet tools to automatically map performance histograms and grades.'
+      function: 'A versatile tool available to build formal self-checking quizzes, detailed diagnostic forms, and assessment surveys with automated responses.',
+      metrics: 'Graphs performance charts and exports data immediately.'
     },
     {
       name: 'Prezi',
-      type: 'Highly Stimulating Visual Presentation',
-      function: 'Builds kinetic mind maps navigating smoothly from macro to micro through smart 3D zooming, defeating presentation apathy caused by static slide templates.',
-      metrics: 'Particularly effective for structuring complex hypermedia taxonomies that demand holistic analysis.'
+      type: 'Structured Visual Presentation of Maps',
+      function: 'Designs dynamic paths on conceptual maps through adjustable three-dimensional zoom, avoiding the teacher apathy associated with flat linear templates.',
+      metrics: 'Maps complex taxonomies for high-level analysis.'
     }
   ];
 
   const platformComparison = [
     {
-      criteria: 'Direct Cost Analysis',
-      openSource: 'Free core software download with no persistent licensing royalties. Demands dedicated budgets for custom web hosting servers and expert IT administration.',
-      commercial: 'Requires mandatory recurring annual licensing fees calculated against the university\'s active student enrollment. Hosting is typically included within the managed SaaS cloud.'
+      criteria: 'Cost Analysis',
+      openSource: 'Free download of central software without ongoing patent licensing fees. Requires investment in local web servers, technical staff, and hosting.',
+      commercial: 'Demands mandatory annual fees calculated against active student enrollment. Cloud hosting is usually included natively.'
     },
     {
       criteria: 'Degree of Customization',
-      openSource: 'Complete and unrestricted autonomy. Because access to the full source code is granted, network engineers can alter databases, write new modules, and integrate local options.',
-      commercial: 'Strictly restricted to parameters, pre-designed templates, and APIs approved by the publisher. Core software structural files remain closed and unalterable.'
+      openSource: 'Total autonomy without restrictions. Since the full source code is provided, the IT team can modify databases, program plugins, and refine styles.',
+      commercial: 'Strictly limited to parameters, templates, and connection APIs agreed upon and pre-approved by the software manufacturer.'
     },
     {
       criteria: 'Server Maintenance',
-      openSource: 'Undergoes critical autonomous maintenance, patching, and redundant security backups handled directly by the university\'s local IT networks team.',
-      commercial: 'SaaS structure. The provider manages updates, database integrity, and patches transparently with no downtime, guaranteeing 99.9% operational server uptime.'
+      openSource: 'Requires ongoing local technical support, redundant backups, and direct preventive patching of infrastructure.',
+      commercial: 'SaaS support. The provider handles updates and data backups invisibly, without pauses in academic service.'
     },
     {
-      criteria: 'Support & Documentation',
-      openSource: 'Sustained by an immense and active global community of millions of teachers, developers, and designers assisting on community Moodle/Chamilo forums.',
-      commercial: 'Official corporate support packages guaranteed through Service Level Agreements (SLAs) with dedicated helpdesk ticketing systems.'
+      criteria: 'Documentation and Community',
+      openSource: 'Supported by global forums with millions of educators and developers (Chamilo/Moodle communities) sharing solutions daily.',
+      commercial: 'Contractual guarantee of direct technical assistance (SLA) through corporate ticket portals.'
     },
     {
       criteria: 'Data Sovereignty',
-      openSource: 'The university owns and hosts all activity logs, SQL databases, and user information, preserving complete privacy of student academic telemetry.',
-      commercial: 'Hosted on offsite managed data centers governed by commercial policies, meaning student logs are held on proprietary cloud hardware.'
+      openSource: 'The university owns and hosts the student database with total autonomy, guaranteeing maximum confidentiality of navigation telemetry.',
+      commercial: 'Navigation information and telemetry are hosted externally in the corporate contractor\'s data centers.'
     }
   ];
 
   const interactiveActivities = [
     {
-      topic: 'Unit 1 End',
-      type: 'External Google Forms Work',
+      topic: 'End of Unit 1',
+      type: 'External Form Workshop',
       targetUrl: 'https://forms.gle/XHFbdYtf8crUYDcn6',
-      label: 'Unit 1 – Student Answer Link',
+      label: 'Unit 1 Response Link',
       isExternal: true
     },
     {
-      topic: 'Unit 2 End',
-      type: 'External Google Forms Work',
+      topic: 'End of Unit 2',
+      type: 'External Form Workshop',
       targetUrl: 'https://forms.gle/XUkNHQG6PLJB8yUj6',
-      label: 'Unit 2 – Student Answer Link',
+      label: 'Unit 2 Response Link',
       isExternal: true
     },
     {
-      topic: 'Topic 1.2',
-      type: 'Interactive Practical Panel',
+      topic: 'Teacher Role Workshop',
+      type: 'Interactive Simulation Panel',
       targetUrl: '#instructor-roles',
-      label: 'The 8 Roles of an Online Instructor',
+      label: 'Interact with the 8 Teacher Roles',
       isExternal: false
     },
     {
-      topic: 'Unit 2 End',
-      type: 'Self-Check Mastery Board',
-      targetUrl: '#lessons-learned',
-      label: 'Executive Wrap-up & Reflections',
+      topic: 'Review and Evaluation',
+      type: 'Self-Checking Quiz',
+      targetUrl: '#interactive-quiz',
+      label: 'Digital Self-Assessment Quiz',
       isExternal: false
     }
   ];
@@ -149,19 +155,18 @@ export default function App() {
       <div className="flex flex-col items-center bg-slate-50 border border-slate-100 p-4 rounded-xl text-center shadow-xs page-break-inside-avoid print-mx-0">
         <img
           src={qrSource}
-          alt={`QR Code for ${textLabel}`}
-          className="w-28 h-28 border border-slate-200 p-1 bg-white rounded-lg shadow-inner"
+          alt={`Código QR para ${textLabel}`}
+          className="w-24 h-24 border border-slate-200 p-1 bg-white rounded-lg shadow-inner"
           referrerPolicy="no-referrer"
         />
-        <p className="text-xs font-bold mt-3 tracking-wide uppercase font-sans" style={{ color: `#${primaryColor}` }}>
+        <p className="text-[10px] font-bold mt-2 tracking-wide uppercase font-sans md:text-xs" style={{ color: `#${primaryColor}` }}>
           {textLabel}
         </p>
         <a
           href={endpoint}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-[10px] font-mono hover:underline mt-1 truncate max-w-[150px] inline-block no-print"
-          style={{ color: primaryColor === "8e24aa" ? "#8e24aa" : "#FF6600" }}
+          className="text-[9px] font-mono hover:underline mt-1 truncate max-w-[140px] inline-block text-orange-600 no-print"
         >
           {endpoint}
         </a>
@@ -169,1006 +174,1354 @@ export default function App() {
     );
   }
 
-  return (
-    <div className="min-h-screen bg-slate-50 text-[#333333] font-sans antialiased selection:bg-orange-500 selection:text-white print:bg-white print:text-black">
-      {/* Dynamic Back-to-Top FAB for desktop experience (hidden on print) */}
-      <div className="fixed bottom-6 right-6 z-50 no-print animate-fade-in" id="custom-action-controls">
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="bg-[#004080] text-white hover:bg-blue-800 p-3.5 rounded-full shadow-lg flex items-center justify-center cursor-pointer transition-all duration-300 transform hover:scale-105"
-          title="Scroll to Top"
-          id="scroll-top-btn"
-        >
-          <ArrowUp className="w-5 h-5" />
-        </button>
-      </div>
+  // Define each of our exactly 30 numbered páginas with deep, rigorous, custom styled academic contents.
+  const pages = [
+    // PAGE 1
+    {
+      number: 1,
+      id: 'page-1',
+      section: 'PORTADA',
+      title: 'Portada del Compendio Académico',
+      content: (
+        <div className="flex flex-col justify-between h-full min-h-[550px] md:min-h-[650px]">
+          <div className="text-center space-y-4 pt-4">
+            <span className="bg-unemi-blue/10 text-unemi-blue text-xs font-bold font-mono px-4 py-1.5 rounded-full uppercase tracking-widest border border-unemi-blue/15">
+              UNIVERSIDAD ESTATAL DE MILAGRO - UNEMI
+            </span>
+            <h2 className="text-xs font-bold tracking-widest text-[#666666] uppercase font-mono mt-1">FACULTAD DE CIENCIAS DE LA EDUCACIÓN</h2>
+            <div className="h-0.5 bg-slate-200 w-full my-4" />
+          </div>
 
-      {/* Main Single Document Scroll Container */}
-      <main id="compendium-main-content" className="max-w-4xl mx-auto bg-white shadow-xl min-h-screen border-x border-slate-200/50 print-shadow-none print-border-none print-mx-0 print-px-0">
-        
-        {/* ==============================================
-            SECTION 1: COVER PAGE
-            ============================================== */}
-        <section id="cover-page" className="py-12 px-8 md:px-16 min-h-[95vh] flex flex-col justify-between border-b-4 border-[#004080]/30 relative overflow-hidden bg-gradient-to-b from-[#E6F0FA]/20 to-white">
-          {/* Cover Watermark Pattern */}
-          <div className="absolute top-0 right-0 w-96 h-96 bg-[#004080]/3 rounded-full blur-3xl -z-10" />
-          <div className="absolute bottom-0 left-0 w-72 h-72 bg-[#FF6600]/3 rounded-full blur-3xl -z-10" />
-
-          {/* Title & Subtitle Area */}
-          <div className="my-10 space-y-4">
-            <h1 className="text-4xl md:text-5xl font-black text-[#004080] tracking-tight leading-tight font-display">
-              E-Learning Systems:
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#004080] to-[#FF6600]/90 mt-2">
-                Types, Trends, and Educational Platforms
+          <div className="my-[2vh] text-center space-y-4">
+            <h1 className="text-3xl md:text-4xl font-black text-unemi-blue tracking-tight leading-tight">
+              SISTEMAS DE E-LEARNING:
+              <span className="block text-unemi-orange mt-1 text-2xl md:text-3.5xl">
+                Tipos, Tendencias y Plataformas Educativas
               </span>
             </h1>
-            <div className="h-1 text-orange-500 w-24 bg-[#FF6600] rounded-full" />
-            <p className="text-lg md:text-xl font-medium text-[#FF6600] leading-relaxed max-w-2xl font-sans">
-              Comprehensive Guide for Self-Directed Learning in the Digital Age (Units 1 & 2)
+            <div className="h-1 text-orange-500 w-24 bg-unemi-orange rounded-full mx-auto" />
+            <p className="text-xs md:text-sm font-medium text-slate-500 leading-relaxed max-w-lg mx-auto">
+              Compendio Temático de Estudio Auto-Dirigido Para Entornos Virtuales de Aprendizaje (Unidades 1 & 2)
             </p>
           </div>
 
-          {/* Generated High Fidelity Cover Artwork */}
-          <div className="my-8 flex justify-center ring-2 ring-[#004080]/10 p-2.5 rounded-3xl bg-slate-50/50 page-break-inside-avoid">
+          <div className="my-4 flex justify-center ring-2 ring-unemi-blue/10 p-2 rounded-2xl bg-slate-50 page-break-inside-avoid max-w-md mx-auto">
             <img
               src="/unemi_cover_elearning_trends_challenges.png"
-              alt="E-Learning: Trends & Challenges Cover Slide"
-              className="w-full h-auto object-contain rounded-2xl shadow-lg border border-slate-200"
+              alt="E-Learning Trends & Challenges"
+              className="w-full h-auto object-contain rounded-xl shadow-md border border-slate-200"
               referrerPolicy="no-referrer"
             />
           </div>
 
-          {/* Institutional Footer and Citation */}
-          <div className="pt-6 border-t border-slate-150 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 text-xs font-sans">
+          <div className="border-t border-slate-100 pt-6 mt-auto">
+            <div className="grid grid-cols-2 gap-4 text-left text-xs text-slate-500 font-sans">
+              <div>
+                <p className="text-slate-400 font-mono text-[10px] uppercase tracking-wider font-semibold">ESTUDIANTE</p>
+                <p className="text-sm font-extrabold text-[#004080]">Nohelia Dayanna Tuquinga Vinueza</p>
+              </div>
+              <div className="text-right">
+                <p className="text-slate-400 font-mono text-[10px] uppercase tracking-wider font-semibold">TÍTULO ACADÉMICO</p>
+                <p className="text-sm font-medium text-slate-800">Compendio Temático Universitario</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 2
+    {
+      number: 2,
+      id: 'page-2',
+      section: 'PRÓLOGO',
+      title: 'Dedicatoria y Prólogo del Compendio',
+      content: (
+        <div className="space-y-6">
+          <h2 className="text-xl font-bold text-unemi-blue border-b pb-2 mb-4">Dedicatoria y Prólogo</h2>
+          
+          <div className="italic text-slate-600 border-l-4 border-unemi-orange pl-4 py-1 text-sm md:text-base leading-relaxed my-4">
+            &ldquo;Este compendio de estudio está dedicado a mis profesores y compañeros de la Universidad Estatal de Milagro (UNEMI), quienes inspiran diariamente la búsqueda del conocimiento científico-tecnológico enfocado en el desarrollo educativo del Ecuador en el siglo XXI.&rdquo;
+            <p className="text-xs font-bold text-[#333333] mt-2 text-right">— Nohelia T.</p>
+          </div>
+
+          <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+            <p className="font-bold text-unemi-blue mt-4">PRÓLOGO ACADÉMICO</p>
+            <p>
+              La adopción masiva de entornos tecnológicos en la educación ha redefinido drásticamente la relación entre el docente, el estudiante y la ecología de la información. La virtualización curricular no consiste únicamente en exportar folletos analógicos al ciberespacio; por el contrario, demanda una reconstrucción metodológica profunda y coherente.
+            </p>
+            <p>
+              Este documento técnico está diseñado sistemáticamente para servir de andamiaje cognitivo sobre los sistemas de e-learning. Su objetivo es mapear las bases conceptuales, los estándares mundiales de interoperabilidad y las tipologías de plataformas disponibles en la actualidad.
+            </p>
+            <p>
+              El lector encontrará a lo largo de este compendio estructurado en 30 páginas un análisis riguroso de las unidades temáticas 1 y 2, complementado con infografías originales, elementos de comprobación activa y enlaces interactivos para una formación integral.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 3
+    {
+      number: 3,
+      id: 'page-3',
+      section: 'ÍNDICE',
+      title: 'Tabla de Contenidos Detallada (Págs. 1-30)',
+      content: (
+        <div className="space-y-4">
+          <h2 className="text-xl font-extrabold text-[#004080] border-b pb-2 flex items-center gap-2">
+            <BookOpen className="w-5 h-5 text-unemi-blue" />
+            <span>📑 Tabla de Contenidos Temática</span>
+          </h2>
+          <p className="text-xs text-slate-400 font-mono mb-2 uppercase">Índice Estructurado de 30 Páginas Numeradas</p>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 text-xs text-slate-700 font-sans">
             <div>
-              <p className="text-slate-400 uppercase tracking-widest font-semibold">Student</p>
-              <p className="text-base font-extrabold text-[#004080] font-display">Nohelia Dayanna Tuquinga Vinueza</p>
+              <p className="font-bold text-unemi-blue border-b pb-1 mb-2 uppercase tracking-wide">Unidad 1: Fundamentos del E-Learning</p>
+              <ul className="space-y-1.5 list-none">
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(1)}>Pág. 1: Portada y Citación Académica</span><span className="font-bold text-unemi-blue">1</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(2)}>Pág. 2: Dedicatoria y Prólogo Educativo</span><span className="font-bold text-unemi-blue">2</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(3)}>Pág. 3: Tabla de Contenidos del Compendio</span><span className="font-bold text-unemi-orange">3</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(4)}>Pág. 4: Introducción General y Objetivos</span><span className="font-bold text-unemi-blue">4</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(5)}>Pág. 5: Unidad 1: El Ecosistema del E-Learning</span><span className="font-bold text-unemi-blue">5</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(6)}>Pág. 6: Tema 1.1: Integración de las TIC - Introd.</span><span className="font-bold text-unemi-blue">6</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(7)}>Pág. 7: Tema 1.1: Teorías del Aprendizaje Digital</span><span className="font-bold text-unemi-blue">7</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(8)}>Pág. 8: Tema 1.1: Redes y Connectivismo (Mapa)</span><span className="font-bold text-unemi-blue">8</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(9)}>Pág. 9: Tema 1.1: Flexibilidad y Propuesta de Valor</span><span className="font-bold text-unemi-blue">9</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(10)}>Pág. 10: Tema 1.2: Arquitectura del Contenido</span><span className="font-bold text-unemi-blue">10</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(11)}>Pág. 11: Tema 1.2: Modalidad Síncrona vs Asíncrona</span><span className="font-bold text-unemi-blue">11</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(12)}>Pág. 12: Tema 1.2: Los 8 Roles del Tutor Docente</span><span className="font-bold text-unemi-blue">12</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(13)}>Pág. 13: Tema 1.2: Simulador Práctico de Roles</span><span className="font-bold text-unemi-blue">13</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(14)}>Pág. 14: Tema 1.2: Estándares de Calidad ISTE</span><span className="font-bold text-unemi-blue">14</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(15)}>Pág. 15: Tema 1.3: Portales y Bibliotecas Digitales</span><span className="font-bold text-unemi-blue">15</span></li>
+              </ul>
+            </div>
+            <div>
+              <p className="font-bold text-unemi-orange border-b pb-1 mb-2 uppercase tracking-wide">Unidad 2: Plataformas y Estándares</p>
+              <ul className="space-y-1.5 list-none">
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(16)}>Pág. 16: Tema 1.3: Arquitectura Multilayer (Portal)</span><span className="font-bold text-unemi-blue">16</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(17)}>Pág. 17: Tema 1.3: Análisis de Portales Mundiales</span><span className="font-bold text-unemi-blue">17</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(18)}>Pág. 18: Tema 1.4: Redes Sociales y Web 2.0</span><span className="font-bold text-unemi-blue">18</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(19)}>Pág. 19: Tema 1.4: Modelo de Impacto Comparativo</span><span className="font-bold text-unemi-blue">19</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(20)}>Pág. 20: Tema 1.4: Netiquette, Taller y QR U1</span><span className="font-bold text-unemi-blue">20</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(21)}>Pág. 21: Unidad 2: Sistemas y Plataformas LMS</span><span className="font-bold text-unemi-blue">21</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(22)}>Pág. 22: Tema 2.1: Senda Evolutiva (E, B, M, U)</span><span className="font-bold text-unemi-blue">22</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(23)}>Pág. 23: Tema 2.1: Gamificación y Micro-learning</span><span className="font-bold text-unemi-blue">23</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(24)}>Pág. 24: Tema 2.2: Mecánicas de Operación de Portafolios</span><span className="font-bold text-unemi-blue">24</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(25)}>Pág. 25: Tema 2.2: Elementos de Retención Escolar</span><span className="font-bold text-unemi-blue">25</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(26)}>Pág. 26: Tema 2.3: Hábitat y Tipología de Plataformas</span><span className="font-bold text-unemi-blue">26</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(27)}>Pág. 27: Tema 2.3: Estándares e Interoperabilidad SCORM</span><span className="font-bold text-unemi-blue">27</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(28)}>Pág. 28: Tema 2.3: Matriz AIRDMA, Taller y QR U2</span><span className="font-bold text-unemi-blue">28</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(29)}>Pág. 29: Conclusiones, Preguntas de Discusión y Quiz</span><span className="font-bold text-unemi-blue">29</span></li>
+                <li className="flex justify-between hover:text-unemi-orange border-b border-dotted border-slate-100 py-0.5"><span className="cursor-pointer" onClick={() => setCurrentPage(30)}>Pág. 30: Glosario Técnico y Referencias Bibliográficas</span><span className="font-bold text-unemi-orange">30</span></li>
+              </ul>
             </div>
           </div>
-        </section>
+        </div>
+      )
+    },
+    // PAGE 4
+    {
+      number: 4,
+      id: 'page-4',
+      section: 'INTRODUCCIÓN',
+      title: 'Introducción General y Objetivos Curriculares',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h2 className="text-xl font-bold text-unemi-blue border-b pb-2 mb-4">Introducción y Objetivos</h2>
+          
+          <p className="font-bold text-[#333333]">CONTEXTO DE ESTUDIO</p>
+          <p>
+            La transición de la sociedad de la información a la sociedad del aprendizaje ha convertido al e-learning en la columna vertebral de la educación contemporánea. No podemos ignorar que la tecnología educativa ha dejado de ser un recurso accesorio para convertirse en el hábitat natural del estudiante.
+          </p>
 
-        {/* ==============================================
-            SECTION 2: TABLE OF CONTENTS (MANUAL ANCHORS)
-            ============================================== */}
-        <section id="table-of-contents" className="py-12 px-8 md:px-16 border-b border-slate-150 bg-slate-50/30">
-          <div className="bg-white rounded-2xl border-2 border-[#004080]/15 p-6 shadow-md print-border">
-            <div className="flex items-center gap-3 border-b border-slate-200 pb-4 mb-6">
-              <BookOpen className="w-6 h-6 text-[#004080]" />
-              <h2 className="text-2xl font-extrabold text-[#004080] font-display tracking-tight">📑 Table of Contents</h2>
-            </div>
+          <p className="font-bold text-[#333333]">OBJETIVOS ACADÉMICOS ESPECÍFICOS</p>
+          <ul className="space-y-2.5 list-disc pl-5">
+            <li>
+              <strong className="text-unemi-blue">Objetivo de la Unidad 1</strong>: Identificar los componentes esenciales del ecosistema digital, analizando la evolución del rol docente, los portales informativos de red y el valor socializador didáctico de las comunidades de práctica Web 2.0.
+            </li>
+            <li>
+              <strong className="text-unemi-blue">Objetivo de la Unidad 2</strong>: Clasificar y comparar técnicamente las tipologías de plataformas virtuales (LMS, SaaS, CMS) desmitificando costes, grados de adaptabilidad local y estándares de compatibilidad interactiva (como SCORM).
+            </li>
+          </ul>
 
-            <div className="space-y-6 text-base text-slate-700">
-              {/* Unit 1 TOC */}
-              <div>
-                <a
-                  href="#unit-1"
-                  onClick={() => setActiveTOC('unit-1')}
-                  className="font-extrabold text-[#004080] hover:text-[#FF6600] flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
-                >
-                  <ChevronRight className="w-4 h-4 text-[#FF6600]" />
-                  <span>Unit 1 – Essential Aspects and Components of E-Learning</span>
-                </a>
-                <ul className="pl-6 mt-2.5 space-y-2 border-l border-[#004080]/10 ml-2">
-                  <li>
-                    <a href="#topic-1-1" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">1.1 Integration of ICTs and the Educational System</span>
-                      <span className="text-slate-350 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 1</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#topic-1-2" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">1.2 Development and Creation of Pedagogical Content</span>
-                      <span className="text-slate-355 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 1</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#topic-1-3" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">1.3 Educational Portals and Cultural Spaces</span>
-                      <span className="text-slate-356 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 1</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#topic-1-4" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">1.4 Social Networks as Learning Spaces</span>
-                      <span className="text-slate-357 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 1</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Unit 2 TOC */}
-              <div>
-                <a
-                  href="#unit-2"
-                  onClick={() => setActiveTOC('unit-2')}
-                  className="font-extrabold text-[#004080] hover:text-[#FF6600] flex items-center gap-2 hover:translate-x-1 transition-transform duration-200"
-                >
-                  <ChevronRight className="w-4 h-4 text-[#FF6600]" />
-                  <span>Unit 2 – Primary Systems and Platforms of E-Learning</span>
-                </a>
-                <ul className="pl-6 mt-2.5 space-y-2 border-l border-[#004080]/10 ml-2">
-                  <li>
-                    <a href="#topic-2-1" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">2.1 Learning Platforms as a Training Environment</span>
-                      <span className="text-slate-358 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 2</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#topic-2-2" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">2.2 E-Learning Platforms and Their Service Portfolio</span>
-                      <span className="text-slate-359 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 2</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#topic-2-3" className="hover:text-[#FF6600] flex justify-between items-center group py-0.5 text-slate-600 hover:text-slate-900 transition-colors">
-                      <span className="font-medium">2.3 Technical Typologies of Educational Platforms</span>
-                      <span className="text-slate-360 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                      <span className="text-xs bg-slate-100 text-[#004080] px-2.5 py-0.5 rounded-full font-bold">Unit 2</span>
-                    </a>
-                  </li>
-                </ul>
-              </div>
-
-              {/* Other sections TOC */}
-              <div className="pt-4 border-t border-slate-150 space-y-3 font-semibold text-slate-700">
-                <a href="#lessons-learned" className="flex justify-between items-center hover:text-[#FF6600] hover:translate-x-1 transition-transform group py-0.5">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4.5 h-4.5 text-[#004080]" />
-                    <span>Conclusions & Lessons Learned</span>
-                  </div>
-                  <span className="text-slate-361 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                  <span className="text-xs text-orange-600 bg-orange-50 border border-orange-200 px-2.5 py-0.5 rounded-full font-bold">Wrap-up</span>
-                </a>
-
-                <a href="#annexes" className="flex justify-between items-center hover:text-[#FF6600] hover:translate-x-1 transition-transform group py-0.5">
-                  <div className="flex items-center gap-2">
-                    <FileText className="w-4.5 h-4.5 text-[#004080]" />
-                    <span>Academic Reference Annexes</span>
-                  </div>
-                  <span className="text-slate-362 font-mono text-xs border-b border-dotted border-slate-200 grow mx-2" />
-                  <span className="text-xs text-indigo-650 bg-indigo-50 border border-indigo-100 px-2.5 py-0.5 rounded-full font-bold">Referential</span>
-                </a>
-                <ul className="pl-6 mt-1 space-y-1.5 border-l border-indigo-200 ml-2 text-xs font-medium text-slate-500">
-                  <li><a href="#glossary" className="hover:text-[#FF6600]">• Technical Glossary of Terms</a></li>
-                  <li><a href="#readings" className="hover:text-[#FF6600]">• Suggested Readings</a></li>
-                  <li><a href="#interactive-index" className="hover:text-[#FF6600]">• Interactive Activities Index</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==============================================
-            SECTION 3: UNIT 1
-            ============================================== */}
-        <section id="unit-1" className="py-12 px-8 md:px-16 border-b border-slate-150 relative">
-          {/* Unit Heading */}
-          <div className="bg-[#E6F0FA] text-[#004080] border-l-8 border-[#004080] p-6 rounded-r-xl mb-8 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-widest font-mono text-slate-500">UNIT ONE</p>
-            <h1 className="text-3xl md:text-4xl font-extrabold font-display tracking-tight mt-1">
-              Unit 1 – Essential Aspects and Components of E-Learning
-            </h1>
+          <p className="font-bold text-[#333333] mt-4">METODOLOGÍA DE COMPROBACIÓN</p>
+          <p>
+            Para garantizar la máxima transferencia de aprendizaje, a lo largo de este compendio estructurado de 30 páginas se alternan marcos de texto teóricos con simuladores prácticos activos situacionales. Asimismo, se incorporan códigos QR directos a los cuadernos digitales interactivos de evaluación de la UNEMI.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 5
+    {
+      number: 5,
+      id: 'page-5',
+      section: 'UNIT 1_ECO',
+      title: 'Unit 1: Structure of the E-Learning Ecosystem',
+      content: (
+        <div className="space-y-4">
+          <div className="bg-[#E6F0FA] text-[#004080] border-l-4 border-unemi-blue p-4 rounded-r-lg mb-4">
+            <span className="text-[10px] font-bold uppercase tracking-widest font-mono text-slate-500">Unit One Overview</span>
+            <h3 className="text-base md:text-lg font-bold">Essential Aspects and Components of E-Learning</h3>
           </div>
 
-          {/* Unit 1 Core Diagram: The E-Learning Ecosystem */}
-          <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            The digital learning ecosystem harmoniously integrates technological infrastructures with pedagogical foundations to ensure knowledge acquisition. The following infographic explains the interaction of these key actors:
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
             <img
               src="/unit1_elearning_ecosystem_pedagogical_foundations.png"
-              alt="The E-Learning Ecosystem (Unit 1)"
-              className="w-full h-auto object-contain rounded-2xl"
+              alt="E-Learning Ecosystem"
+              className="w-full h-auto object-contain rounded-xl"
               referrerPolicy="no-referrer"
             />
           </div>
 
-          {/* TOPIC 1.1 */}
-          <div id="topic-1-1" className="mb-16 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">1.1</span>
-              <span>Topic 1.1 – Integration of ICTs and the Educational System</span>
-            </h2>
+          <div className="bg-white border-l-4 border-unemi-orange p-3.5 rounded-r-lg shadow-2xs text-xs text-slate-600 leading-relaxed mt-2">
+            <h4 className="font-bold text-unemi-blue mb-1 uppercase tracking-wide">Ecosystem Dimensions:</h4>
+            <p>1. <strong>Learning Content</strong>: Didactically designed in rich hypermedia formats.</p>
+            <p>2. <strong>Technological Platform</strong>: Interactive support software regulating user analytics.</p>
+            <p>3. <strong>Virtual Tutor and Students</strong>: Key agents of dynamic asynchronous conversations.</p>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 6
+    {
+      number: 6,
+      id: 'page-6',
+      section: 'TOPIC 1.1_A',
+      title: 'Topic 1.1: ICT Integration in Education - Concept',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.1</span>
+            <span>ICT Integration and the Educational System (Part I)</span>
+          </h3>
 
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span><strong className="text-[#004080]">E-learning</strong> unifies traditional pedagogical theories with the ongoing expansion of network technologies to deliver rich education beyond conventional classroom walls.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>It relies heavily on <strong className="text-[#004080]">Connectivism</strong>, a learning theory where knowledge is distributed across human and technological networks.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Digital competencies and ICT expertise of instructors are essential to guide student debate and facilitate structured online social dialogue.</span>
-                </li>
-              </ul>
-            </div>
+          <p>
+            Digital literacy transcends mere instrumental training in office tools. Systematically integrating Information and Communication Technologies (ICT) in contemporary universities demands weaving curated pedagogy with interactive resources.
+          </p>
 
-            {/* Theoretical Foundations & Network Tech Diagram */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/elearning_cognitivism_connectivism_constructivism.png"
-                alt="E-Learning: Blending Teaching Theory and Network Tech"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Embedded Visual Mind Map */}
-            <InteractiveMindMap />
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
+          <div className="bg-slate-50 border border-slate-100 rounded-xl p-4 my-3">
+            <p className="font-bold text-unemi-blue mb-2 text-xs uppercase tracking-wide">Dimensions of Digital Learning:</p>
+            <div className="space-y-3">
+              <div className="flex gap-2 items-start text-xs">
+                <span className="text-unemi-orange font-bold">•</span>
+                <p><strong>Cognitive Autonomy</strong>: The virtual student takes direct control of their study tempo, flexibly researching educational sources.</p>
               </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 1 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;E-learning is never about merely adding wires and machines; it is a fundamental methodological shift that expands the flexibility and scale of accessing structured human knowledge.&rdquo;
-                </p>
+              <div className="flex gap-2 items-start text-xs">
+                <span className="text-unemi-orange font-bold">•</span>
+                <p><strong>Digital Equity</strong>: Overcoming geographical and socioeconomic barriers in Ecuador through offline-first, downloadable, and responsive content.</p>
+              </div>
+              <div className="flex gap-2 items-start text-xs">
+                <span className="text-unemi-orange font-bold">•</span>
+                <p><strong>Media Literacy</strong>: Developing critical thinking and filtering skills relative to the massive flow of information on the Internet.</p>
               </div>
             </div>
-
-            {/* Value Proposition: Flexibility, Borderless, and Self-Paced Freedom */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#FF6600]/10 page-break-inside-avoid">
-              <img
-                src="/value_proposition_flexibility_borderless_self_paced.png"
-                alt="Value Proposition: Flexibility, Borderless Access, and Self-Paced Freedom"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-
           </div>
 
-          {/* TOPIC 1.2 */}
-          <div id="topic-1-2" className="mb-16 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">1.2</span>
-              <span>Topic 1.2 – Development and Creation of Pedagogical Content</span>
-            </h2>
+          <p>
+            ICT implementation radically reshapes traditional analog lesson plans, welcoming collaborative dynamics that were unthinkable a decade ago in physical classrooms.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 7
+    {
+      number: 7,
+      id: 'page-7',
+      section: 'TOPIC 1.1_B',
+      title: 'Topic 1.1: Digital Learning Theories',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.1</span>
+            <span>Digital Learning Theories (Part II)</span>
+          </h3>
 
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Instructional assets are categorized into <strong className="text-[#004080]">Asynchronous</strong> (deferred-time, self-paced forums) and <strong className="text-[#004080]">Synchronous</strong> (live online lectures and chats).</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Format structures are highly diverse: educational video games, qualitative peer checks, hypermedia simulations, and open licensing didactic modules.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>The virtual tutor in the 21st century serves dynamically as a curriculum architect, facilitator, and assessor, adjusting continuously to students\' learning interactions.</span>
-                </li>
-              </ul>
-            </div>
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            Virtual learning platforms rest on solid epistemological foundations that support the co-creation of knowledge distributed over hypermedia networks.
+          </p>
 
-            {/* Content Architecture Flowchart */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/digital_content_architecture_web_hosting_multimedia.png"
-                alt="Architecture of Digital Content Delivery: Define Objectives, Web Hosting, Multimedia, and Autonomous Execution"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* 8 Online Instructor Roles Diagram */}
-            <div id="instructor-roles" className="scroll-mt-12 my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/online_instructor_8_roles.png"
-                alt="The 8 Multifaceted Roles of the Online Instructor: Technical, Pedagogical, and Managerial"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Visual Roles Instructor Component */}
-            <InstructorRoles />
-
-            {/* ISTE Standards Teaching Pyramid */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#FF6600]/10 page-break-inside-avoid">
-              <img
-                src="/iste_standards_digital_age_teaching.png"
-                alt="ISTE Standards for Teaching in the Digital Age"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
-              </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 1 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;A solid virtual methodology empowers the online student to guide their own study tempo using a balanced mix of hypermedia references, text, audio, and interactive systems.&rdquo;
-                </p>
-              </div>
-            </div>
-
-
-          </div>
-
-          {/* TOPIC 1.3 */}
-          <div id="topic-1-3" className="mb-16 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">1.3</span>
-              <span>Topic 1.3 – Educational Portals and Cultural Spaces</span>
-            </h2>
-
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Portals serve as centralized access gateways and structural anchor sites across the Web, guaranteeing institutional rigor, citation standards, and verified curriculum resources.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>They offer unique added value such as: augmented reality (AR) modules, virtual lab spaces, structured digital catalogs, and kinetic mappings.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Iconic, world-class educational portal examples include: <strong className="text-[#004080]">Google Earth</strong> (earth sciences, geography), <strong className="text-[#004080]">National Geographic Education</strong> (biological research), and <strong className="text-[#004080]">The Wonderment</strong> (global media collaboration).</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Portal Structure Component */}
-            <PortalStructure />
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
-              </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 1 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;A methodical integration of educational portals in virtual courses greatly accelerates academic autonomy and analytical reasoning among university students.&rdquo;
-                </p>
-              </div>
-            </div>
-
-
-          </div>
-
-          {/* TOPIC 1.4 */}
-          <div id="topic-1-4" className="mb-8 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">1.4</span>
-              <span>Topic 1.4 – Social Networks as Learning Spaces</span>
-            </h2>
-
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Online social networks dismantle structural isolation barriers, enabling immediate group coordination requiring zero advanced software experience.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>The <strong className="text-[#004080]">Web 2.0</strong> revolution and mass systems like Wikipedia or YouTube promote active co-creation, peer evaluation, and social intelligence.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Unbending ethical rules match: solid prevention of cyberbullying, safe-handling of sensitive data, and upholding formal, supportive class communication.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Custom Comparison Table for Social Networks */}
-            <div className="my-8">
-              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm print-border">
-                <table className="w-full font-sans text-left border-collapse">
-                  <thead>
-                    <tr className="bg-[#004080] text-white">
-                      <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Social Platform</th>
-                      <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Operational Specialty</th>
-                      <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Best Pedagogical Leverage</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-sm h-auto">
-                    {socialNetworks.map((net, nIdx) => {
-                      const IconNode = net.icon;
-                      return (
-                        <tr key={nIdx} className="hover:bg-slate-50/40">
-                          <td className="py-4 px-4 font-bold text-[#004080]">
-                            <div className="flex items-center gap-2">
-                              <span className="p-1 rounded bg-slate-100 shrink-0">
-                                <IconNode className="w-4 h-4 text-[#FF6600]" />
-                              </span>
-                              <span>{net.platform}</span>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4 text-slate-600 font-medium font-display leading-tight text-xs">
-                            {net.bestFor}
-                          </td>
-                          <td className="py-4 px-4 text-slate-700 leading-relaxed text-xs">
-                            {net.learningUse}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
-              </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 1 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;A standard social messenger transforms into a rich learning ecosystem only when governed by active Communities of Practice and guided by healthy Netiquette rules.&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* Unit 1 - Student Answer Link Google Forms Block */}
-            <div className="bg-purple-50/50 rounded-xl border-2 border-purple-200 p-6 flex flex-col md:flex-row items-center justify-between gap-6 page-break-inside-avoid shadow-xs">
-              <div className="space-y-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full border border-purple-200 inline-flex items-center gap-1.5 font-mono">
-                  <FileText className="w-3.5 h-3.5 text-purple-700" />
-                  <span>Google Forms Activity</span>
-                </span>
-                <h4 className="text-xl font-extrabold text-purple-950 font-display">Unit 1 – Student Answer Link</h4>
-                <p className="text-sm text-slate-600 max-w-md leading-relaxed">
-                  Submit your responses, assessments, and learning journal entries for Unit 1. Scan the QR code or click the active link to open our verified Google Forms workbook.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://forms.gle/XHFbdYtf8crUYDcn6" textLabel="Unit 1 Google Form" primaryColor="8e24aa" />
-            </div>
-          </div>
-        </section>
-
-        {/* ==============================================
-            SECTION 4: UNIT 2
-            ============================================== */}
-        <section id="unit-2" className="py-12 px-8 md:px-16 border-b border-slate-150 relative">
-          {/* Unit Heading */}
-          <div className="bg-[#E6F0FA] text-[#004080] border-l-8 border-[#004080] p-6 rounded-r-xl mb-8 shadow-sm">
-            <p className="text-xs font-bold uppercase tracking-widest font-mono text-slate-500">UNIT TWO</p>
-            <h1 className="text-3xl md:text-4xl font-extrabold font-display tracking-tight mt-1">
-              Unit 2 – Primary Systems and Platforms of E-Learning
-            </h1>
-          </div>
-
-          {/* Unit 2 Core Concept Card */}
-          <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
             <img
-              src="/modern_educational_platform_core_concept.png"
-              alt="Core Concept and Functions of a Modern Educational Platform"
-              className="w-full h-auto object-contain rounded-2xl"
+              src="/elearning_cognitivism_connectivism_constructivism.png"
+              alt="Learning Theories"
+              className="w-full h-auto object-contain rounded-xl"
               referrerPolicy="no-referrer"
             />
           </div>
 
-          {/* TOPIC 2.1 */}
-          <div id="topic-2-1" className="mb-16 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">2.1</span>
-              <span>Topic 2.1 – Learning Platforms as a Training Environment</span>
-            </h2>
+          <div className="space-y-2 text-xs text-slate-600 leading-normal font-medium">
+            <p><strong>Digital Cognitivism</strong>: Explains how the mind processes structured, complex interactive multimedia stimuli.</p>
+            <p><strong>Constructivism</strong>: Conceptualizes the student as an architect who shapes their understanding through empirical and reflective conceptual quizzes.</p>
+            <p><strong>Connectivism (George Siemens)</strong>: Postulates that learning occurs non-linearly, distributed across networks and nourished by multiple dynamic technological nodes.</p>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 8
+    {
+      number: 8,
+      id: 'page-8',
+      section: 'TOPIC 1.1_C',
+      title: 'Topic 1.1: Connectivist Networks (Mind Map)',
+      content: (
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.1</span>
+            <span>Connectivist Networks and Mind Map (Part III)</span>
+          </h3>
 
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>E-learning platforms are structured web applications designed specifically to distribute multimedia contents and enable cohesive communication.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Evolution of Paradigms: leading from early <strong className="text-[#004080]">E-Learning</strong> (desktop browsers), through <strong className="text-[#004080]">B-Learning</strong> (hybrid instruction), to <strong className="text-[#004080]">M-Learning</strong> (portable smartphones), and finally <strong className="text-[#004080]">U-Learning</strong> (seamless context-aware omnipresent learning).</span>
-                </li>
-              </ul>
-            </div>
+          <p className="text-xs text-slate-700 leading-relaxed">
+            To explore the articulation between interactive technology and educational learning theories in the virtual ecosystem, we invite you to examine and directly interact with our digital panel:
+          </p>
 
-            {/* Evolutionary Trajectory Diagram */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/evolutionary_trajectory_e_b_m_u.png"
-                alt="The Evolutionary Trajectory of Digital Education (E -> B -> M -> U)"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Visual Timeline component */}
-            <TimelineEvolution />
-
-            {/* E-Learning Future Trends Diagram */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#FF6600]/10 page-break-inside-avoid">
-              <img
-                src="/elearning_trends_blended_micro_gamification.png"
-                alt="E-Learning Future Trends: Blended, Micro-learning, Gamification, Personalization, Continuous Content"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
-              </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 2 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;Modern virtual setups allow structured evaluations to run automatically, delivering instant, detailed diagnostic data sheets to customize learning.&rdquo;
-                </p>
-              </div>
-            </div>
-
-
+          <div className="border border-slate-200 rounded-xl p-3 bg-white shadow-2xs">
+            <InteractiveMindMap />
           </div>
 
-          {/* TOPIC 2.2 */}
-          <div id="topic-2-2" className="mb-16 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">2.2</span>
-              <span>Topic 2.2 – E-Learning Platforms and Their Service Portfolio</span>
-            </h2>
+          <p className="text-[10px] text-slate-500 font-mono mt-1 leading-normal italic">
+            *Interactive Guide: Click on each node of the mind map on your screen to expand theoretical details and connect critical reflections.*
+          </p>
+        </div>
+      )
+    },
+    // PAGE 9
+    {
+      number: 9,
+      id: 'page-9',
+      section: 'TOPIC 1.1_D',
+      title: 'Topic 1.1: Value Proposition, Flexibility and Boundaries',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.1</span>
+            <span>Value Proposition, Flexibility and Boundaries (Part IV)</span>
+          </h3>
 
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Primary actors with structured access: <strong className="text-[#004080]">Students</strong>, <strong className="text-[#004080]">Instructors/Tutors</strong>, and global <strong className="text-[#004080]">IT Administrators</strong>.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Classification of training tools: Learning-focused features (strategic), Content-creation features (didactic design), and Performance/Productivity utilities (operational).</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Top productivity suites: <strong className="text-[#004080]">Zoom</strong> (synchronous meetings), <strong className="text-[#004080]">Google Docs</strong> (collaborative editing), and <strong className="text-[#004080]">ProofHub</strong> (milestone tracking and assignments).</span>
-                </li>
-              </ul>
-            </div>
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            The greatest competitive advantage of e-learning lies in its multifactorial value proposition: it permits aligning learning rhythms with active professional demands.
+          </p>
 
-            {/* Platform Mechanics, Actors & Functional Areas Diagram */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/platform_mechanics_features_actors_teacher_learner.png"
-                alt="Platform Mechanics, Core Features, and Key Actors (Teacher, Learner, Administrator)"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/value_proposition_flexibility_borderless_self_paced.png"
+              alt="E-Learning Value Proposition"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
 
-            {/* Engagement Tools Infographic Block */}
-            <div className="my-8">
-              <p className="text-xs font-extrabold text-[#004080] uppercase tracking-widest pl-2 border-l-4 border-orange-500 mb-4 inline-block font-mono">
-                Infographic: Interaction and Retention Applications
+          <p className="text-xs md:text-sm text-slate-600 leading-relaxed mt-2">
+            Spatial flexibility tears down border barriers, enabling Ecuadorian students from UNEMI to asynchronously share knowledge with researchers and experts all over the world without expensive travel.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 10
+    {
+      number: 10,
+      id: 'page-10',
+      section: 'TOPIC 1.2_A',
+      title: 'Topic 1.2: Digital Content Architecture',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.2</span>
+            <span>Pedagogical Content Creation (Part I)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            Instructional design demands structuring with scientific rigor the learning paths of virtual students. The following infographic outlines the methodological path to achieve this:
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/digital_content_architecture_web_hosting_multimedia.png"
+              alt="Digital Content Architecture"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-600 leading-relaxed mt-1">
+            Successful design begins by systematically integrating clear course competency objectives, hosting on robust servers capable of preserving access during user peaks, and multimedia support guided by clear usability paths.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 11
+    {
+      number: 11,
+      id: 'page-11',
+      section: 'TOPIC 1.2_B',
+      title: 'Topic 1.2: Synchronous vs. Asynchronous Modes',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.2</span>
+            <span>Asynchronous and Synchronous Dynamics (Part II)</span>
+          </h3>
+
+          <p>
+            Determining the right proportion and usage of deferred-time tools (asynchronous) and shared-real-time tools (synchronous) conditions the active student retention rate.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 my-3 text-xs">
+            <div className="bg-orange-50 border border-orange-200 p-4 rounded-xl">
+              <p className="font-bold text-unemi-orange uppercase mb-1 font-mono">Asynchronous Spaces</p>
+              <p className="text-slate-700 leading-relaxed">
+                Allow the gradual digestion of complex theories, filtered analytical participation in written debates via wikis, and periodic self-assessments without direct teacher clocks.
               </p>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {engagementTools.map((tool, tIdx) => (
-                  <div key={tIdx} className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs flex flex-col justify-between print-border page-break-inside-avoid">
-                    <div>
-                      <h4 className="font-bold text-base text-[#004080] font-display flex items-center gap-1.5 mb-1 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
-                        <span className="w-2 h-2 rounded bg-orange-500 shrink-0" />
-                        <span>{tool.name}</span>
-                      </h4>
-                      <p className="text-[10px] font-semibold text-slate-400 uppercase tracking-widest mb-3.5 mt-1">{tool.type}</p>
-                      <p className="text-xs text-slate-600 leading-relaxed mb-4">{tool.function}</p>
-                    </div>
-                    <div className="bg-emerald-50/40 p-3 rounded-lg border border-emerald-100/60 mt-2 text-xs">
-                      <p className="font-bold text-[#004080] text-[10px] uppercase tracking-wider">Tracking Contribution</p>
-                      <p className="text-slate-600 leading-normal mt-0.5">{tool.metrics}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
             </div>
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
-              </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 2 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;A virtual instructor\'s operational productivity is born from combining careful structural curriculum plotting with consistent institutional discipline.&rdquo;
-                </p>
-              </div>
-            </div>
-
-
-          </div>
-
-          {/* TOPIC 2.3 */}
-          <div id="topic-2-3" className="mb-8 scroll-mt-6">
-            <h2 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2 border-b-2 border-slate-100 pb-3.5 mb-6">
-              <span className="bg-[#004080] text-white w-8 h-8 rounded-lg flex items-center justify-center font-mono font-bold text-sm shrink-0">2.3</span>
-              <span>Topic 2.3 – Technical Typologies of Educational Platforms</span>
-            </h2>
-
-            {/* Key Aspects Box */}
-            <div className="bg-white border-l-4 border-[#004080] p-5 rounded-r-xl shadow-xs mb-6 print-border">
-              <h4 className="text-xs font-extrabold text-[#004080] uppercase tracking-wider mb-2.5 font-mono">Key Concepts & Aspects</h4>
-              <ul className="space-y-2.5 text-base text-slate-700 leading-relaxed">
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span>Modern virtual structures can be classified across 7 technical types, ranging from full Learning Management Systems (LMS), global open MOOC catalogs, to highly customized portals.</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span><strong className="text-[#004080]">Open Source</strong>: Free source code availability allowing unrestricted adaptations and local hosting (e.g., Moodle, Chamilo).</span>
-                </li>
-                <li className="flex gap-2.5 items-start">
-                  <span className="text-[#FF6600] font-bold mt-0.5">•</span>
-                  <span><strong className="text-[#004080]">Proprietary Platforms</strong>: Commercially closed products protected by licensing fees, delivering managed SaaS setups and institutional support (e.g., Coursera, MS Teams).</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Choosing the Right Habitat Matrix */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/typology_matrix_lms_moocs_lxs_apps.png"
-                alt="Choosing the Right Habitat: LMS, Employee Training, MOOCs, LXS, Custom Platforms, Apps Matrix"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Software Platform Typologies & Interoperability Standards */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/software_platform_typologies_lms_cms_lxp_scorm.png"
-                alt="Software Platform Typologies, Mechanics, and Interoperability Standards (SCORM, xAPI)"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* 9 Types of Software Platforms Grid */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#004080]/10 page-break-inside-avoid">
-              <img
-                src="/nine_types_of_software_platforms.png"
-                alt="The 9 Types of Software Platforms Matrix"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Visual: Platform Comparison Table */}
-            <div className="my-8">
-              <p className="text-xs font-extrabold text-[#004080] uppercase tracking-widest pl-2 border-l-4 border-[#004080] mb-4 inline-block font-mono">
-                Comparative Matrix: LMS Platforms & Architectures
+            <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl">
+              <p className="font-bold text-unemi-blue uppercase mb-1 font-mono">Synchronous Spaces</p>
+              <p className="text-slate-700 leading-relaxed">
+                Ideal for the immediate resolution of complex conceptual blocks, consolidating social bonds of group belonging through dialogue and videoconferencing.
               </p>
-              <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm print-border">
-                <table className="w-full font-sans text-left border-collapse">
-                  <thead>
-                    <tr className="bg-[#004080] text-white">
-                      <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Technical Criteria</th>
-                      <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Open Source (LMS)</th>
-                      <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Commercial / SaaS Cloud</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-sm h-auto leading-relaxed">
-                    {platformComparison.map((row, rIdx) => (
-                      <tr key={rIdx} className="hover:bg-slate-50/30">
-                        <td className="py-4 px-4 font-bold text-[#004080] w-[20%] text-xs">
-                          {row.criteria}
-                        </td>
-                        <td className="py-4 px-4 text-slate-700 w-[40%] text-xs">
-                          {row.openSource}
-                        </td>
-                        <td className="py-4 px-4 text-slate-600 w-[40%] text-xs">
-                          {row.commercial}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Standardization Benefits Diagnostic Matrix (AIRDMA) */}
-            <div className="my-[30px] rounded-3xl overflow-hidden shadow-lg border border-slate-200/80 p-2.5 bg-slate-50 ring-2 ring-[#FF6600]/10 page-break-inside-avoid">
-              <img
-                src="/standardization_benefits_airdma_matrix.png"
-                alt="The Benefits of Standardizing E-Learning: AIRDMA Diagnostic Matrix"
-                className="w-full h-auto object-contain rounded-2xl"
-                referrerPolicy="no-referrer"
-              />
-            </div>
-
-            {/* Custom Lessons Learned Box */}
-            <div className="bg-[#FFF3E0] border-2 border-[#FF6600] rounded-xl p-5 shadow-xs mb-8 flex gap-4 print-border">
-              <div className="bg-[#FF6600] text-white p-2.5 h-10 w-10 text-center rounded-lg flex items-center justify-center shrink-0">
-                💡
-              </div>
-              <div>
-                <h5 className="text-xs font-extrabold text-[#FF6600] uppercase tracking-wide font-mono mb-1">Unit 2 • Lesson Learned</h5>
-                <p className="text-base text-orange-950 font-medium font-sans leading-relaxed">
-                  &ldquo;Adhering to recognized global compliance standards (e.g., SCORM packages, LTI protocols) remains a crucial step to secure course exporting across different university database systems.&rdquo;
-                </p>
-              </div>
-            </div>
-
-            {/* Unit 2 - Student Answer Link Google Forms Block */}
-            <div className="bg-purple-50/50 rounded-xl border-2 border-purple-200 p-6 flex flex-col md:flex-row items-center justify-between gap-6 page-break-inside-avoid shadow-xs">
-              <div className="space-y-2">
-                <span className="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full border border-purple-200 inline-flex items-center gap-1.5 font-mono">
-                  <FileText className="w-3.5 h-3.5 text-purple-700" />
-                  <span>Google Forms Activity</span>
-                </span>
-                <h4 className="text-xl font-extrabold text-purple-950 font-display">Unit 2 – Student Answer Link</h4>
-                <p className="text-sm text-slate-600 max-w-md leading-relaxed">
-                  Submit your responses, assessments, and learning journal entries for Unit 2. Scan the QR code or click the active link to open our verified Google Forms workbook.
-                </p>
-              </div>
-              <QRCodeElement endpoint="https://forms.gle/XUkNHQG6PLJB8yUj6" textLabel="Unit 2 Google Form" primaryColor="8e24aa" />
             </div>
           </div>
-        </section>
 
-        {/* ==============================================
-            SECTION 5: INTEGRAL LESSONS LEARNED SECTION
-            ============================================== */}
-        <section id="lessons-learned" className="py-12 px-8 md:px-16 border-b border-slate-150 bg-slate-50/50">
-          <div className="bg-[#E6F0FA] border-2 border-[#004080] rounded-3xl p-8 shadow-md print-border print-shadow-none">
-            <div className="flex items-center gap-3 border-b border-[#004080]/20 pb-4 mb-6">
-              <CheckCircle2 className="w-7 h-7 text-[#004080]" />
-              <h2 className="text-2xl md:text-3xl font-black text-[#004080] font-display tracking-tight">Executive Wrap-up & Reflections</h2>
-            </div>
+          <p>
+            The wise virtual tutor does not suffocate students with daily marathon videoconferences; they strategically distribute efforts across ordered prior readings and fluid debates guided by specific milestones of academic contribution.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 12
+    {
+      number: 12,
+      id: 'page-12',
+      section: 'TOPIC 1.2_C',
+      title: 'Topic 1.2: The 8 Roles of the Teaching Tutor',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.2</span>
+            <span>The 8 Roles of the Virtual Instructor (Part III)</span>
+          </h3>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 leading-relaxed mb-8">
-              {/* Unit 1 learnings list */}
-              <div className="space-y-3">
-                <span className="text-xs font-bold uppercase tracking-widest bg-[#004080] text-white px-3 py-1 rounded-full font-mono">
-                  Unit 1 • Summary
-                </span>
-                <ul className="space-y-3.5 mt-2.5 text-base text-slate-700">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#004080] font-extrabold">✓</span>
-                    <span>Virtual learning redefines classic teaching parameters, centering students actively inside custom-built web environments instead of physical layouts.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#004080] font-extrabold">✓</span>
-                    <span>The modern online teacher acts as an active multimedia architect, managing collaborative student dialogue and moderating group work.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#004080] font-extrabold">✓</span>
-                    <span>Well-structured public gates and portals are reliable keystones enabling successful self-paced academic exploration.</span>
-                  </li>
-                </ul>
-              </div>
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            The 21st-century educator abdicates the podium of infallible lecturer and assumes multifaceted, cross-cutting roles essential for success in virtual computer-backed learning:
+          </p>
 
-              {/* Unit 2 learnings list */}
-              <div className="space-y-3">
-                <span className="text-xs font-bold uppercase tracking-widest bg-[#FF6600] text-white px-3 py-1 rounded-full font-mono">
-                  Unit 2 • Summary
-                </span>
-                <ul className="space-y-3.5 mt-2.5 text-base text-slate-700">
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#FF6600] font-extrabold">✓</span>
-                    <span>Choosing the ideal platform requires analyzing direct license fees, open source sovereignty, and administrative maintenance needs.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#FF6600] font-extrabold">✓</span>
-                    <span>Productivity integrations (Google Forms, Prezi, Kahoot!) keep students engaged while providing instant analytics to tutors.</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-[#FF6600] font-extrabold">✓</span>
-                    <span>The future belongs to Ubiquitous Learning (U-Learning), blending online education effortlessly with day-to-day student routines.</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
+          <div className="my-[5px] rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/online_instructor_8_roles.png"
+              alt="8 Instructor Roles"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
 
-            {/* Reflection Questions Box */}
-            <div className="bg-white border border-[#004080]/15 rounded-2xl p-6 shadow-sm print-border">
-              <h4 className="text-xl font-bold text-[#004080] font-display flex items-center gap-2 mb-4">
-                <HelpCircle className="w-5 h-5 text-[#FF6600]" />
-                <span>🤔 Academic Reflection Questions</span>
-              </h4>
-              <div className="space-y-3.5 font-sans pl-2 border-l-2 border-orange-500/70">
-                <div className="bg-slate-50/50 p-2 rounded">
-                  <p className="text-sm font-semibold text-[#004080]">1. Which LMS architecture would you recommend for an asynchronous language program, and why?</p>
-                </div>
-                <div className="bg-slate-50/50 p-2 rounded">
-                  <p className="text-sm font-semibold text-[#004080]">2. How can social networks be directly harnessed inside standard university curriculums to aid performance without distraction?</p>
-                </div>
-                <div className="bg-slate-50/50 p-2 rounded">
-                  <p className="text-sm font-semibold text-[#004080]">3. Among the 8 online tutor roles, which do you see as primary in reducing student drop-out rates, and how would you foster it?</p>
-                </div>
-              </div>
+          <p className="text-xs text-slate-600 leading-relaxed mt-1">
+            Pedagogical, technical, organizational, social, analytics evaluator, and direct feedback roles must be carefully balanced to prevent students from experiencing dropouts or digital isolation.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 13
+    {
+      number: 13,
+      id: 'page-13',
+      section: 'TOPIC 1.2_D',
+      title: 'Topic 1.2: Teaching Roles Simulator',
+      content: (
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.2</span>
+            <span>Teaching Performance and Roles Simulator (Part IV)</span>
+          </h3>
+
+          <p className="text-xs text-slate-700 leading-relaxed md:text-sm">
+            To evaluate how each dimension of the tutor operates in practical scenarios within the UNEMI digital campus, interact with the following academic decision simulator:
+          </p>
+
+          <div className="border border-slate-200 rounded-xl p-3 bg-white shadow-2xs">
+            <InstructorRoles />
+          </div>
+
+          <p className="text-[10px] text-slate-500 font-mono italic mt-1 leading-normal">
+            *Situational Simulator: Click on each teaching role to assess its direct academic impact field, and consider which curricular specialty requires your focus.*
+          </p>
+        </div>
+      )
+    },
+    // PAGE 14
+    {
+      number: 14,
+      id: 'page-14',
+      section: 'TOPIC 1.2_E',
+      title: 'Topic 1.2: ISTE Quality Standards',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.2</span>
+            <span>ISTE Educational Technology Quality Standards (Part V)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            Methodological standardization guarantees that online learning experiences are robust. The international ISTE educational technology standards organize professional requirements into well-defined pyramids:
+          </p>
+
+          <div className="my-[10px] rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/iste_standards_digital_age_teaching.png"
+              alt="ISTE Standards"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-600 leading-relaxed mt-1">
+            Ensuring that educators master these critical competencies dramatically improves results in virtual university licensing audits.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 15
+    {
+      number: 15,
+      id: 'page-15',
+      section: 'TOPIC 1.3_A',
+      title: 'Topic 1.3: Digital Portals and Libraries',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.3</span>
+            <span>Educational Portals and Cultural Spaces (Part I)</span>
+          </h3>
+
+          <p>
+            Institutional educational portals act as curricular centralizers that guarantee conceptual accuracy, scientific citation, and filtering relative to open web repositories.
+          </p>
+
+          <div className="bg-[#FFF3E0] border border-orange-200 rounded-xl p-4 my-2">
+            <p className="font-bold text-unemi-orange mb-1 text-xs uppercase font-mono">EXTRAORDINARY ADDED VALUE:</p>
+            <p className="text-slate-700 leading-relaxed text-xs">
+              Unlike flat analog repositories, contemporary portals offer integrated three-dimensional simulators, interactive virtual laboratories, and dynamically connected hypermedia libraries that catalyze higher education students' desire for research.
+            </p>
+          </div>
+
+          <p>
+            By integrating a prestigious educational portal in UNEMI classes, the instructor stimulates high-level self-regulated learning and fosters student familiarity with verified scientific and methodological bases.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 16
+    {
+      number: 16,
+      id: 'page-16',
+      section: 'TOPIC 1.3_B',
+      title: 'Topic 1.3: Portal Architecture (Explorer)',
+      content: (
+        <div className="space-y-2">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.3</span>
+            <span>Multi-layered Portal Support and Architecture (Part II)</span>
+          </h3>
+
+          <p className="text-xs text-slate-700 leading-relaxed md:text-sm">
+            To grasp the computer and logistics structure behind a world-leading virtual portal, try interacting with our multi-layered explorer:
+          </p>
+
+          <div className="border border-slate-200 rounded-xl p-3 bg-white shadow-2xs">
+            <PortalStructure />
+          </div>
+
+          <p className="text-[10px] text-slate-500 font-mono italic mt-1 leading-normal">
+            *Interaction Guide: Navigate through the top tabs on your screen to reveal the operational functionality of each layer or stratum.*
+          </p>
+        </div>
+      )
+    },
+    // PAGE 17
+    {
+      number: 17,
+      id: 'page-17',
+      section: 'TOPIC 1.3_C',
+      title: 'Topic 1.3: Analysis of High-Impact Global Portals',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.3</span>
+            <span>Global Case Studies Analysis (Part III)</span>
+          </h3>
+
+          <p>
+            Analyzing highly successful real-world cases helps us understand the boundaries of interactive e-learning:
+          </p>
+
+          <div className="space-y-4 my-2 text-xs">
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+              <p className="font-extrabold text-unemi-blue mb-1">1. Google Earth in Earth Sciences</p>
+              <p className="text-slate-600 leading-relaxed">
+                Revoluzionizes geographic studies, allowing real-time mapping from microscopic to planetary scales with extremely high-resolution feeds.
+              </p>
             </div>
             
-            {/* Embedded Live Self-Assessment Interactive Quiz */}
-            <div className="mt-8 no-print">
-              <InteractiveQuiz />
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+              <p className="font-extrabold text-[#004080] mb-1">2. National Geographic Education</p>
+              <p className="text-slate-600 leading-relaxed">
+                Centralizes rich scientific databases for young biological researchers with access to high-level interactive heuristic simulation tools.
+              </p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl">
+              <p className="font-extrabold text-unemi-blue mb-1">3. The Wonderment</p>
+              <p className="text-slate-600 leading-relaxed">
+                Fosters open student collaboration on a global network, connecting problems of different ethnicities using student photo-reporting.
+              </p>
             </div>
           </div>
-        </section>
+        </div>
+      )
+    },
+    // PAGE 18
+    {
+      number: 18,
+      id: 'page-18',
+      section: 'TOPIC 1.4_A',
+      title: 'Topic 1.4: Social Networks and Web 2.0 in Education',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.4</span>
+            <span>Social Networks as Learning Spaces (Part I)</span>
+          </h3>
 
-        {/* ==============================================
-            SECTION 6: ANNEXES / GLOSSARY / READINGS
-            ============================================== */}
-        <section id="annexes" className="py-12 px-8 md:px-16 leading-relaxed">
-          <div className="bg-white border-l-8 border-[#004080] p-4 rounded-r-xl mb-10 shadow-xs">
-            <p className="text-xs font-bold uppercase tracking-widest font-mono text-slate-500 font-semibold">REFERENCE APPENDIX</p>
-            <h1 className="text-3xl font-extrabold text-[#004080] font-display tracking-tight">Academic Annexes</h1>
+          <p>
+            Web 2.0 marked the historical end of flat, one-way static browsing. With it, students shifted from being passive receivers to active creators and disseminators of scientific content.
+          </p>
+
+          <p>
+            Social communication networks, when managed with proper pedagogical guidelines, break down student academic isolation and boost immediate feedback among university peers in record time.
+          </p>
+
+          <div className="bg-[#FFF3E0] border border-orange-200 rounded-xl p-4">
+            <p className="font-bold text-unemi-orange text-xs uppercase font-mono mb-1">COMMUNITIES OF PRACTICE (COP):</p>
+            <p className="text-slate-700 leading-relaxed text-xs">
+              Subtly connected, they facilitate asynchronous debates enriched with memes of educational value, carefully curated summary threads, and suggested bibliographies that empower the global UNEMI academic community.
+            </p>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 19
+    {
+      number: 19,
+      id: 'page-19',
+      section: 'TOPIC 1.4_B',
+      title: 'Topic 1.4: Social Networks Comparative Matrix',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.4</span>
+            <span>Comparative Matrix of Connected Pedagogy (Part II)</span>
+          </h3>
+
+          <p className="text-xs text-slate-700 leading-relaxed md:text-sm">
+            Each platform hosts unique sociological dynamics that determine its best didactic use in the virtual advisor's course planning:
+          </p>
+
+          <div className="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-2xs my-1">
+            <table className="w-full text-left font-sans text-xs">
+              <thead>
+                <tr className="bg-unemi-blue text-white">
+                  <th className="py-2.5 px-3 font-bold uppercase tracking-wider">Social Network</th>
+                  <th className="py-2.5 px-3 font-bold uppercase tracking-wider">Operational Speciality</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 leading-relaxed">
+                {socialNetworks.map((net, idx) => (
+                  <tr key={idx} className="hover:bg-slate-50/50">
+                    <td className="py-2.5 px-3 font-bold text-unemi-blue">
+                      {net.platform}
+                    </td>
+                    <td className="py-2.5 px-3 text-slate-600">
+                      {net.bestFor}. <span className="italic text-slate-500 font-sans">{net.learningUse}</span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 20
+    {
+      number: 20,
+      id: 'page-20',
+      section: 'TOPIC 1.4_C',
+      title: 'Topic 1.4: Netiquette, Coexistence and Unit 1 Workbook',
+      content: (
+        <div className="space-y-4 text-xs md:text-sm text-slate-700 leading-relaxed">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">1.4</span>
+            <span>Netiquette and Unit 1 Evaluative Workshop (Part III)</span>
+          </h3>
+
+          <p>
+            Social learning across networks only thrives when a healthy virtual coexistence is guaranteed under strict universal protocols of courtesy and mutual respect (Netiquette).
+          </p>
+
+          <div className="bg-purple-50/80 rounded-2xl border-2 border-purple-200 p-5 flex flex-col md:flex-row items-center justify-between gap-6 page-break-inside-avoid shadow-xs select-all">
+            <div className="space-y-2 max-w-md">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full border border-purple-200 inline-flex items-center gap-1.5 font-mono">
+                <FileText className="w-3 h-3 text-purple-700 animate-pulse" />
+                <span>Google Forms Activity</span>
+              </span>
+              <h4 className="text-base font-extrabold text-purple-950 font-display">Unit 1 Syllabus – Workbook</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Submit your project progress, assimilation logs, and reflective journals corresponding to Unit 1. Scan the QR code or click the interactive link to open the authorized UNEMI worksheet.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <QRCodeElement endpoint="https://forms.gle/XHFbdYtf8crUYDcn6" textLabel="Unit 1 Form" primaryColor="8e24aa" />
+            </div>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 21
+    {
+      number: 21,
+      id: 'page-21',
+      section: 'UNIT 2_INI',
+      title: 'Unit 2: E-Learning Systems and Platforms',
+      content: (
+        <div className="space-y-4">
+          <div className="bg-[#E6F0FA] text-[#004080] border-l-4 border-unemi-blue p-4 rounded-r-lg mb-4">
+            <span className="text-[10px] font-bold uppercase tracking-widest font-mono text-slate-500">Unit Two Overview</span>
+            <h3 className="text-base md:text-lg font-bold">Modern E-Learning Platforms and Systems</h3>
           </div>
 
-          {/* Glossary Sub-block */}
-          <div id="glossary" className="mb-14 scroll-mt-6">
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            Unit 2 delves into the core software that regulates educational interactions on the Internet, mapping its technical and functional requirements analytically:
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/modern_educational_platform_core_concept.png"
+              alt="E-Learning Platforms"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-600 leading-relaxed mt-2 font-medium">
+            Understanding that an interactive modern virtual platform unifies user administration, agile digital packaging (like SCORM), and interoperability allows us to predict corporate learning success.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 22
+    {
+      number: 22,
+      id: 'page-22',
+      section: 'TOPIC 2.1_A',
+      title: 'Topic 2.1: Evolutionary Path towards U-Learning',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.1</span>
+            <span>The Evolutionary Senda of E, B, M towards U-Learning (Part I)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            Technology evolves rapidly. Analyzing the line of paradigm milestones in e-learning reveals leaps in flexibility and knowledge portability:
+          </p>
+
+          <div className="my-[5px] rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/evolutionary_trajectory_e_b_m_u.png"
+              alt="Visual Trajectory"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-500 font-mono italic mb-2">Interactive Life Line of Educational Paradigms:</p>
+          <div className="border border-slate-200 rounded-xl p-3 bg-white shadow-2xs">
+            <TimelineEvolution />
+          </div>
+        </div>
+      )
+    },
+    // PAGE 23
+    {
+      number: 23,
+      id: 'page-23',
+      section: 'TOPIC 2.1_B',
+      title: 'Topic 2.1: Gamification, Micro-learning and Trends',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.1</span>
+            <span>Gamification and Micro-learning Trends (Part II)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            The future of corporate and university training is shifting towards agile formats that tackle virtual cognitive overloads head-on:
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/elearning_trends_blended_micro_gamification.png"
+              alt="E-Learning Trends"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-600 leading-relaxed mt-1">
+            Combining micro-learning (knowledge parsed into 5-minute pieces), healthy and interactive educational gamification, and automated predictive data analytics successfully mitigates university course dropout rates.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 24
+    {
+      number: 24,
+      id: 'page-24',
+      section: 'TOPIC 2.2_A',
+      title: 'Topic 2.2: Operating Mechanics of Portals and Platforms',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.2</span>
+            <span>Mechanics and Core Actors in E-Learning (Part I)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            An effective virtual learning platform harmoniously coordinates three independent primary roles: students, teaching advisors, and IT system administrators.
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/platform_mechanics_features_actors_teacher_learner.png"
+              alt="Platform Mechanics"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-650 leading-relaxed mt-2 font-medium">
+            Each actor accesses a unique functional range: the IT administrator monitors databases; the professor uploads educational rubrics; the student interacts and submits asynchronous reviews.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 25
+    {
+      number: 25,
+      id: 'page-25',
+      section: 'TOPIC 2.2_B',
+      title: 'Topic 2.2: Student Retention and Gamification',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.2</span>
+            <span>Gamification and Student Engagement Tools (Part II)</span>
+          </h3>
+
+          <p className="text-xs text-slate-755 font-medium md:text-sm leading-relaxed">
+            Integrating cutting-edge interactive learning tools in higher education encourages group-belonging motivation and collects precise progress metrics:
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 my-2 text-xs">
+            {engagementTools.map((tool, idx) => (
+              <div key={idx} className="bg-white border border-slate-200 p-4 rounded-xl shadow-3xs flex flex-col justify-between">
+                <div>
+                  <h4 className="font-bold text-unemi-blue border-b pb-1 mb-2 uppercase">{tool.name}</h4>
+                  <p className="text-[10px] text-unemi-orange font-mono font-bold mb-2">{tool.type}</p>
+                  <p className="text-slate-600 leading-relaxed">{tool.function}</p>
+                </div>
+                <div className="bg-emerald-55 text-emerald-950 border border-emerald-100 p-2.5 rounded-lg mt-3 text-[10px] uppercase font-semibold text-center italic">
+                  {tool.metrics}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )
+    },
+    // PAGE 26
+    {
+      number: 26,
+      id: 'page-26',
+      section: 'TOPIC 2.3_A',
+      title: 'Topic 2.3: Habitat and Typology of Platforms',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.3</span>
+            <span>Educational Habitat and Platform Typology (Part I)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            Selecting the ideal primary platform requires rigorously weighing localized maintenance budgets, user database control or sovereignty, and desired scalability.
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/typology_matrix_lms_moocs_lxs_apps.png"
+              alt="Typology Habitat Matrix"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-655 leading-relaxed mt-1">
+            Analyzing whether a project requires a robust traditional university LMS, a massive MOOC platform, or a native responsive mobile application saves educational institutions millions in setup costs.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 27
+    {
+      number: 27,
+      id: 'page-27',
+      section: 'TOPIC 2.3_B',
+      title: 'Topic 2.3: SCORM Standards and Interoperability',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.3</span>
+            <span>Academic Interoperability and Standardization (Part II)</span>
+          </h3>
+
+          <p className="text-xs md:text-sm text-slate-700 leading-relaxed">
+            To avoid vendor lock-in and ensure that online courses can be migrated freely between platform providers, standard packaging protocols are worldwide mandatory requirements:
+          </p>
+
+          <div className="my-2 rounded-2xl overflow-hidden shadow-md border border-slate-200 p-2 bg-slate-50 ring-2 ring-unemi-blue/5 page-break-inside-avoid max-w-lg mx-auto">
+            <img
+              src="/software_platform_typologies_lms_cms_lxp_scorm.png"
+              alt="Interoperability Standards SCORM xAPI"
+              className="w-full h-auto object-contain rounded-xl"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+
+          <p className="text-xs text-slate-650 leading-relaxed mt-2 font-semibold">
+            The universal SCORM protocol and experience APIs (xAPI) ensure that the learner's progress, grades, and formatting interactions are recorded with complete technical transparency.
+          </p>
+        </div>
+      )
+    },
+    // PAGE 28
+    {
+      number: 28,
+      id: 'page-28',
+      section: 'TOPIC 2.3_C',
+      title: 'Topic 2.3: AIRDMA Matrix, Workshop and Unit 2 QR',
+      content: (
+        <div className="space-y-4">
+          <h3 className="text-lg font-bold text-unemi-blue font-display flex items-center gap-2 border-b pb-2">
+            <span className="bg-unemi-blue text-white text-xs w-6 h-6 rounded flex items-center justify-center font-mono font-bold">2.3</span>
+            <span>Platform Statistics and Unit 2 Workshop (Part III)</span>
+          </h3>
+
+          <div className="grid grid-cols-2 gap-4 my-2 max-w-lg mx-auto page-break-inside-avoid">
+            <div className="rounded-xl overflow-hidden shadow border border-slate-200 p-1.5 bg-slate-50">
+              <img
+                src="/nine_types_of_software_platforms.png"
+                alt="Nine Types of Platforms"
+                className="w-full h-auto object-contain rounded-lg"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+            <div className="rounded-xl overflow-hidden shadow border border-slate-200 p-1.5 bg-slate-50">
+              <img
+                src="/standardization_benefits_airdma_matrix.png"
+                alt="AIRDMA Standardization"
+                className="w-full h-auto object-contain rounded-lg"
+                referrerPolicy="no-referrer"
+              />
+            </div>
+          </div>
+
+          <div className="bg-purple-50/80 rounded-2xl border-2 border-purple-200 p-4 flex flex-col md:flex-row items-center justify-between gap-4 page-break-inside-avoid shadow-xs select-all">
+            <div className="space-y-2 max-w-md">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-700 px-2 rounded-full border border-purple-200 inline-flex items-center gap-1.5 font-mono">
+                <FileText className="w-3 h-3 text-purple-700 animate-pulse" />
+                <span>Google Forms Activity</span>
+              </span>
+              <h4 className="text-base font-extrabold text-purple-950 font-display">Unit 2 Syllabus – Workbook</h4>
+              <p className="text-xs text-slate-600 leading-relaxed">
+                Submit your direct feedback, analytical field notes, and Unit 2 milestones. Scan the QR code or click on the interactive datasheet link.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <QRCodeElement endpoint="https://forms.gle/XUkNHQG6PLJB8yUj6" textLabel="Unit 2 Form" primaryColor="8e24aa" />
+            </div>
+          </div>
+        </div>
+      )
+    },
+    // PAGE 29
+    {
+      number: 29,
+      id: 'page-29',
+      section: 'CONCLUSIONS',
+      title: 'Strategic Conclusions, Reflections and Quiz',
+      content: (
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-unemi-blue border-b pb-2 mb-2 flex items-center gap-2">
+            <CheckCircle2 className="w-5 h-5 text-unemi-orange animate-bounce" />
+            <span>Integrative Educational Reflections</span>
+          </h2>
+
+          <div className="space-y-3 text-xs md:text-sm text-slate-700 leading-relaxed">
+            <p className="font-bold text-unemi-blue">ACADEMIC DECISION MAKING:</p>
+            
+            <div className="bg-slate-50 border border-slate-150 p-3 rounded-lg text-xs leading-normal">
+              <p className="font-semibold text-slate-800">1. Which platform architecture do you recommend for a massive asynchronous program and why?</p>
+              <p className="text-slate-500 mt-1">We recommend Moodle or Canvas Cloud (SaaS) for their robustness, SCORM compliance, scaling, and the ability to process telemetries of thousands of learners in real-time.</p>
+            </div>
+
+            <div className="bg-slate-50 border border-slate-150 p-3 rounded-lg text-xs leading-normal">
+              <p className="font-semibold text-slate-800">2. In what ways can social networks be integrated into the syllabus safely?</p>
+              <p className="text-slate-500 mt-1">Through private projects, guided laboratory history portfolios, and moderated debates under rigorous ethical guidelines (Netiquette).</p>
+            </div>
+          </div>
+
+          <div className="mt-2 border border-slate-150 rounded-xl bg-[#FFF3E0]/35 p-3.5 shadow-3xs">
+            <InteractiveQuiz />
+          </div>
+        </div>
+      )
+    },
+    // PAGE 30
+    {
+      number: 30,
+      id: 'page-30',
+      section: 'ANNEXES',
+      title: 'Glossary of Terms, Readings and APA Bibliography',
+      content: (
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold text-[#004080] border-b pb-2 flex items-center gap-2">
+            <Layers className="w-5 h-5 text-unemi-blue" />
+            <span>Technical Glossary &amp; APA 7 Bibliography</span>
+          </h2>
+
+          <p className="text-xs text-slate-500 italic">
+            Authorized collection of logistic terms for pedagogical directors and official references:
+          </p>
+
+          <div className="border border-slate-200 rounded-xl p-3 bg-white shadow-3xs">
             <GlossaryView />
           </div>
 
-          {/* Readings Sub-block */}
-          <div id="readings" className="mb-14 scroll-mt-6 page-break-inside-avoid">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6 pb-2 border-b border-slate-150">
-              <h3 className="text-2xl font-extrabold text-[#004080] font-display flex items-center gap-2">
-                <span className="bg-[#004080] text-white w-2 h-6 rounded-md shrink-0" />
-                <span>Suggested Readings & Bibliographical References</span>
-              </h3>
-              <span className="text-[10px] font-bold bg-[#E6F0FA] text-[#004080] px-3 py-1 rounded-full uppercase tracking-wider font-mono">
-                APA 7th Edition Format
-              </span>
-            </div>
-            
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 md:p-8 shadow-sm print-border">
-              <ul className="space-y-6 font-sans">
-                {/* 1. Academic Journal of Educational Technology */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Academic Journal of Educational Technology. (2021). Entering the third generation of e-learning: Paradigms &amp; best practices. <span className="italic">Journal of Educational Technology Systems</span>, <span className="italic">50</span>(1), 45-62. <a href="https://doi.org/10.1177/004723952110291" target="_blank" rel="noopener noreferrer" className="text-[#FF6600] tracking-tight hover:underline font-mono text-xs inline-flex items-center gap-0.5 ml-1 select-all">https://doi.org/10.1177/004723952110291 <ExternalLink className="w-2.5 h-2.5 inline shrink-0" /></a>
-                </li>
-
-                {/* 2. ISTE */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  International Society for Technology in Education. (2020). <span className="italic">International technology standards for students, educators, and leaders</span>. ISTE.
-                </li>
-
-                {/* 3. UNESCO */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  UNESCO. (2019). <span className="italic">Impact of modern technology and open educational resources (OER) in Latin America: Studies in regional educational policies and inclusiveness</span>. UNESCO Regional Office for Education in Latin America and the Caribbean.
-                </li>
-
-                {/* 4. Zambrano Theme 1 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 1: Essential aspects and components of e-learning. Theme 1: E-learning: ICT and educational system integration</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-
-                {/* 5. Zambrano Theme 2 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 1: Essential aspects and components of e-learning. Theme 2: Content development</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-
-                {/* 6. Zambrano Theme 3 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 1: Essential aspects and components of e-learning. Theme 3: Educational and cultural portals as a teaching-learning strategy and training content resources</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-
-                {/* 7. Zambrano Theme 4 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 1: Essential aspects and components of e-learning. Theme 4: Social networking as learning spaces</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-
-                {/* 8. Zambrano U2 Theme 1 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 2: Main e-learning systems and platforms. Theme 1: Learning platforms as a new training space</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-
-                {/* 9. Zambrano U2 Theme 2 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 2: Main e-learning systems and platforms. Theme 2: E-learning platforms and their services</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-
-                {/* 10. Zambrano U2 Theme 3 */}
-                <li style={{ paddingLeft: '2rem', textIndent: '-2rem' }} className="text-sm text-slate-700 leading-relaxed hover:text-slate-900 transition-colors">
-                  Zambrano Pachay, J. (n.d.). <span className="italic">Unit 2: Main e-learning systems and platforms. Theme 3: Types of educational platforms</span> [PowerPoint slides]. Universidad Estatal de Milagro.
-                </li>
-              </ul>
+          <div className="bg-slate-50 border border-slate-200 p-4 rounded-xl text-xs leading-relaxed mt-2 font-sans">
+            <p className="font-extrabold text-unemi-blue mb-2 uppercase tracking-wide">Official Bibliographic References (APA VII):</p>
+            <div className="space-y-2 text-slate-600 max-h-[150px] overflow-y-auto pr-2 pl-3 border-l-2 border-unemi-orange">
+              <p style={{ paddingLeft: '1.5rem', textIndent: '-1.5rem' }}>
+                Academic Journal of Educational Technology. (2021). Entering the third generation of e-learning: Paradigms &amp; best practices. <span className="italic">Systems</span>, <span className="italic">50</span>(1), 45-62.
+              </p>
+              <p style={{ paddingLeft: '1.5rem', textIndent: '-1.5rem' }}>
+                International Society for Technology in Education (ISTE). (2020). <span className="italic">International technology standards for students, educators, and leaders</span>. ISTE.
+              </p>
+              <p style={{ paddingLeft: '1.5rem', textIndent: '-1.5rem' }}>
+                UNESCO. (2019). <span className="italic">Impact of modern technology and open educational resources (OER) in Latin America: Studies in regional educational policies</span>. UNESCO Regional Office.
+              </p>
+              <p style={{ paddingLeft: '1.5rem', textIndent: '-1.5rem' }}>
+                Zambrano Pachay, J. (2025). <span className="italic">Aspectos esenciales y componentes del e-learning: Integración de las TIC en la educación</span> [Supporting Curricular Material]. Universidad Estatal de Milagro - UNEMI.
+              </p>
             </div>
           </div>
+        </div>
+      )
+    }
+  ];
 
-          {/* Interactive Activities Summary table */}
-          <div id="interactive-index" className="mb-8 scroll-mt-6 page-break-inside-avoid">
-            <h3 className="text-2xl font-extrabold text-[#004080] font-display mb-6 pb-2 border-b border-slate-100 flex items-center gap-2">
-              <span className="bg-[#004080] text-white w-2 h-6 rounded-md shrink-0" />
-              <span>Interactive Activities Index (QR Codes)</span>
-            </h3>
+  const currentPageData = pages[currentPage - 1];
 
-            <p className="text-sm text-slate-500 mb-4 italic leading-relaxed">
-              Consolidated catalog of practical workbook exercises and deep-dive interactive components.
-            </p>
+  const navigateToPage = (pageNum: number) => {
+    if (pageNum >= 1 && pageNum <= 30) {
+      setCurrentPage(pageNum);
+      // Automatically scroll to the book container to ensure smooth reading experience on smaller viewports
+      const containerElement = document.getElementById('book-reader-view-heading');
+      if (containerElement) {
+        containerElement.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
 
-            <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm print-border">
-              <table className="w-full font-sans text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#004080] text-white">
-                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Target / Syllabus Scope</th>
-                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Activity Specialty</th>
-                    <th className="py-3.5 px-4 text-xs font-bold uppercase tracking-wider font-display">Destination Connection</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 text-sm h-auto leading-relaxed">
-                  {interactiveActivities.map((act, aIdx) => (
-                    <tr key={aIdx} className="hover:bg-slate-50/30">
-                      <td className="py-3 px-4 font-bold text-[#004080]">
-                        {act.topic}
-                      </td>
-                      <td className="py-3 px-4 text-slate-600 font-medium text-xs">
-                        {act.type}
-                      </td>
-                      <td className="py-3 px-4 text-xs font-semibold">
-                        <div className="flex items-center gap-2">
-                          {act.isExternal ? (
-                            <span className="inline-flex items-center gap-1 bg-purple-50 text-purple-700 px-2.5 py-1 rounded-md border border-purple-100 text-xs shadow-3xs animate-pulse">
-                              <FileText className="w-3.5 h-3.5 text-purple-700" />
-                              <a
-                                href={act.targetUrl}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:underline font-bold"
-                              >
-                                {act.label}
-                              </a>
-                              <ExternalLink className="w-3 h-3 text-purple-400 shrink-0" />
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md border border-blue-100 text-xs shadow-3xs">
-                              <BookOpen className="w-3.5 h-3.5 text-blue-700" />
-                              <a
-                                href={act.targetUrl}
-                                className="hover:underline font-bold"
-                              >
-                                {act.label}
-                              </a>
-                            </span>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </section>
-
-        {/* Academic Copyright and Institutional footer */}
-        <footer className="bg-[#004080] text-white/80 py-8 px-8 text-center text-xs font-sans border-t-4 border-[#FF6600]">
-          <div className="flex justify-center">
-            <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center border border-white/20 font-black text-white text-base">
+  return (
+    <div className="min-h-screen bg-slate-900 text-slate-100 font-sans antialiased selection:bg-unemi-orange selection:text-white print:bg-white print:text-black">
+      {/* GLOBAL BANNER NO-PRINT */}
+      <header className="no-print bg-unemi-blue text-white py-3.5 px-6 sticky top-0 z-50 shadow-md border-b-2 border-unemi-orange">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center border-2 border-unemi-orange font-black text-unemi-blue text-xs shadow-md">
               UNEMI
             </div>
+            <div>
+              <h1 className="text-sm font-black tracking-tight font-display text-white">
+                Curricular Compendium: E-Learning Systems
+              </h1>
+              <p className="text-[10px] text-slate-200 uppercase tracking-widest font-bold">
+                Units 1 & 2 • Nohelia Dayanna Tuquinga Vinueza
+              </p>
+            </div>
           </div>
-        </footer>
-      </main>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {/* View Mode Controller */}
+            <div className="bg-slate-800/80 p-1 rounded-lg border border-slate-700 inline-flex">
+              <button
+                onClick={() => setViewMode('book')}
+                className={`px-3 py-1.5 rounded text-xs font-bold font-display cursor-pointer transition-all flex items-center gap-1.5 ${
+                  viewMode === 'book'
+                    ? 'bg-unemi-blue text-white shadow-sm'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+                }`}
+                title="Read page by page as an official document"
+              >
+                <Book className="w-3.5 h-3.5" />
+                <span>Book Mode (30 Pages)</span>
+              </button>
+              <button
+                onClick={() => setViewMode('scroll')}
+                className={`px-3 py-1.5 rounded text-xs font-bold font-display cursor-pointer transition-all flex items-center gap-1.5 ${
+                  viewMode === 'scroll'
+                    ? 'bg-unemi-blue text-white shadow-sm'
+                    : 'text-slate-400 hover:text-white hover:bg-slate-700/60'
+                }`}
+                title="View all 30 structured pages in sequence"
+              >
+                <Printer className="w-3.5 h-3.5" />
+                <span>Full View (PDF)</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* BODY STAGE */}
+      <div className="max-w-7xl mx-auto px-4 py-6 md:py-8 grid grid-cols-1 lg:grid-cols-12 gap-6 relative">
+        
+        {/* SIDEBAR NAVIGATION INDEX (BOOK VIEW MODE ONLY - HIDDEN ON PRINT) */}
+        {viewMode === 'book' && (
+          <aside className="no-print lg:col-span-3 bg-slate-850 border border-slate-800 rounded-2xl p-4 h-[calc(100vh-120px)] overflow-y-auto sticky top-24 shadow-lg scrollbar-thin">
+            <div className="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
+              <span className="text-[#999999] hover:text-white font-black text-xs font-mono uppercase tracking-widest flex items-center gap-2">
+                <Layers className="w-4 h-4 text-unemi-orange animate-pulse" />
+                <span>Compendium Index</span>
+              </span>
+              <span className="bg-unemi-orange/25 border border-unemi-orange/30 text-unemi-orange text-[10px] font-bold px-2.5 py-0.5 rounded-full font-mono">
+                30 Pages
+              </span>
+            </div>
+
+            <div className="space-y-1.5 font-sans">
+              {pages.map((p) => (
+                <button
+                  key={p.number}
+                  onClick={() => navigateToPage(p.number)}
+                  className={`w-full text-left p-2.5 rounded-xl border transition-all flex gap-3 text-xs items-center cursor-pointer ${
+                    currentPage === p.number
+                      ? 'bg-unemi-blue/25 border-unemi-blue text-white font-extrabold shadow-md'
+                      : 'border-transparent text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
+                  }`}
+                >
+                  <span className={`w-5.5 h-5.5 shrink-0 rounded-lg flex items-center justify-center font-bold font-mono text-[10px] ${
+                    currentPage === p.number
+                      ? 'bg-unemi-orange text-white'
+                      : 'bg-slate-800 text-slate-500'
+                  }`}>
+                    {p.number}
+                  </span>
+                  <div className="truncate">
+                    <p className="font-bold mb-0.5" style={{ color: currentPage === p.number ? '#88bbf2' : '' }}>
+                      {p.section}
+                    </p>
+                    <p className="truncate text-[10px] text-slate-400 font-medium">
+                      {p.title}
+                    </p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </aside>
+        )}
+
+        {/* COMPENDIO WRAPPER */}
+        <div className={`col-span-1 lg:col-span-9 flex flex-col items-center ${viewMode === 'scroll' ? 'lg:col-span-12' : ''}`}>
+          
+          {/* TOP CONTROLLERS AND PROGRESS FOR BOOK READER MODE */}
+          {viewMode === 'book' && (
+            <div className="no-print w-full max-w-3xl flex flex-col md:flex-row justify-between items-center gap-3 mb-4 bg-slate-800/40 border border-slate-800 rounded-2xl p-4 text-sm shadow-xs">
+              <div className="flex gap-2 text-slate-350 shrink-0 select-none">
+                <button
+                  onClick={() => navigateToPage(1)}
+                  disabled={currentPage === 1}
+                  className="p-2 border border-slate-700 bg-slate-800 hover:bg-slate-700 rounded-lg disabled:opacity-30 disabled:hover:bg-slate-800 transition-colors cursor-pointer"
+                  title="First page"
+                >
+                  <ChevronsLeft className="w-4 h-4 text-white" />
+                </button>
+                <button
+                  onClick={() => navigateToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="p-2 border border-slate-700 bg-slate-800 hover:bg-slate-700 rounded-lg disabled:opacity-30 disabled:hover:bg-slate-800 transition-colors cursor-pointer"
+                  title="Previous page"
+                >
+                  <ChevronLeft className="w-4 h-4 text-white" />
+                </button>
+              </div>
+
+              {/* Progress and Dropdown */}
+              <div className="flex flex-col items-center w-full max-w-xs gap-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-slate-400 font-mono">Go to page:</span>
+                  <select
+                    value={currentPage}
+                    onChange={(e) => navigateToPage(Number(e.target.value))}
+                    className="bg-slate-800 border-2 border-slate-700 rounded-lg text-white font-mono font-bold text-xs p-1 cursor-pointer focus:border-unemi-orange max-w-[80px]"
+                  >
+                    {pages.map((p) => (
+                      <option key={p.number} value={p.number}>
+                        Page {p.number}
+                      </option>
+                    ))}
+                  </select>
+                  <span className="text-xs font-bold text-slate-300 font-mono font-medium">of 30</span>
+                </div>
+                {/* Visual completion progress bar */}
+                <div className="w-full bg-slate-700/80 h-1.5 rounded-full overflow-hidden mt-1 text-center">
+                  <div 
+                    className="bg-unemi-orange h-full transition-all duration-300"
+                    style={{ width: `${(currentPage / 30) * 100}%` }}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2 text-slate-350 shrink-0 select-none">
+                <button
+                  onClick={() => navigateToPage(currentPage + 1)}
+                  disabled={currentPage === 30}
+                  className="p-2 border border-slate-700 bg-slate-800 hover:bg-slate-700 rounded-lg disabled:opacity-30 disabled:hover:bg-slate-800 transition-colors cursor-pointer"
+                  title="Next page"
+                >
+                  <ChevronRight className="w-4 h-4 text-white" />
+                </button>
+                <button
+                  onClick={() => navigateToPage(30)}
+                  disabled={currentPage === 30}
+                  className="p-2 border border-slate-700 bg-slate-800 hover:bg-slate-700 rounded-lg disabled:opacity-30 disabled:hover:bg-slate-800 transition-colors cursor-pointer"
+                  title="Last page"
+                >
+                  <ChevronsRight className="w-4 h-4 text-white" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* PAGE SHEET STAGE */}
+          <div className="w-full max-w-3xl flex flex-col gap-8 print:w-full print:max-w-none">
+            
+            {/* BOOK VIEW MODE */}
+            {viewMode === 'book' ? (
+              <main
+                id="book-reader-view-heading"
+                className="bg-white text-[#333333] shadow-2xl border border-slate-200/40 rounded-3xl min-h-[95vh] flex flex-col justify-between p-6 sm:p-10 md:p-14 relative print:shadow-none print:border-none print:p-0 print:min-h-0"
+              >
+                {/* Academic Header */}
+                <header className="border-b border-slate-100 pb-3 mb-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono tracking-wider">
+                  <span>UNEMI</span>
+                  <span className="text-unemi-blue">{currentPageData.section}</span>
+                </header>
+
+                {/* Page content */}
+                <div className="grow flex flex-col justify-center py-4">
+                  {currentPageData.content}
+                </div>
+
+                {/* Page Footer */}
+                <footer className="border-t border-slate-100 pt-3 mt-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono">
+                  <span>Nohelia Dayanna Tuquinga Vinueza</span>
+                  <span className="text-unemi-orange bg-unemi-light-orange/60 px-2 py-0.5 rounded">
+                    PAGE {currentPageData.number} OF 30
+                  </span>
+                </footer>
+              </main>
+            ) : (
+              /* CONTINUOUS SCROLL VIEW / PRINT PREVIEW MODE */
+              <div className="space-y-6 w-full print:space-y-0 print:gap-0">
+                {pages.map((p) => (
+                  <main
+                    key={p.number}
+                    className="bg-white text-[#333333] shadow-md border border-slate-200 rounded-2xl min-h-[95vh] flex flex-col justify-between p-6 sm:p-10 md:p-14 relative page-break print:m-0 print:border-none print:shadow-none print:rounded-none print:min-h-[1050px]"
+                  >
+                    {/* Academic Header */}
+                    <header className="border-b border-slate-100 pb-3 mb-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono tracking-wider">
+                      <span>UNEMI</span>
+                      <span className="text-unemi-blue">{p.section}</span>
+                    </header>
+
+                    {/* Page Content */}
+                    <div className="grow flex flex-col justify-center py-4">
+                      {p.content}
+                    </div>
+
+                    {/* Page Footer */}
+                    <footer className="border-t border-slate-100 pt-3 mt-6 flex justify-between items-center text-[10px] font-bold text-slate-400 font-mono">
+                      <span>Nohelia Dayanna Tuquinga Vinueza</span>
+                      <span className="text-unemi-orange bg-unemi-light-orange/65 px-2.5 py-0.5 rounded font-black font-mono">
+                        PAGE {p.number} OF 30
+                      </span>
+                    </footer>
+                  </main>
+                ))}
+              </div>
+            )}
+
+            {/* LOWER CONTROLLERS FOR BOOK MODE ONLY */}
+            {viewMode === 'book' && (
+              <div className="no-print mt-4 flex justify-between items-center w-full max-w-3xl bg-slate-800/40 border border-slate-800 rounded-2xl p-4 text-xs font-semibold gap-3">
+                <button
+                  onClick={() => navigateToPage(currentPage - 1)}
+                  disabled={currentPage === 1}
+                  className="px-4 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white rounded-xl disabled:opacity-30 disabled:hover:bg-slate-800 flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                  <span>Previous</span>
+                </button>
+
+                <div className="text-slate-400 font-mono font-medium">
+                  Page <strong className="text-white font-extrabold">{currentPage}</strong> of <strong className="text-white">30</strong>
+                </div>
+
+                <button
+                  onClick={() => navigateToPage(currentPage + 1)}
+                  disabled={currentPage === 30}
+                  className="px-4 py-2 bg-slate-800 border border-slate-700 hover:bg-slate-700 text-white rounded-xl disabled:opacity-30 disabled:hover:bg-slate-800 flex items-center gap-1 cursor-pointer transition-colors"
+                >
+                  <span>Next</span>
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* FOOTER */}
+      <footer className="no-print bg-slate-950 mt-12 py-12 border-t border-slate-800/80">
+        <div className="max-w-7xl mx-auto px-6 flex flex-col items-center text-center gap-4 text-slate-400 text-xs">
+          <div className="w-12 h-12 rounded-2xl bg-slate-850 flex items-center justify-center border border-slate-850 font-black text-white text-sm shadow-md">
+            UNEMI
+          </div>
+          <p className="font-bold text-slate-300">State University of Milagro • Education Sciences</p>
+          <p>© 2026. All rights reserved. Syllabus Work developed for autonomous learning.</p>
+        </div>
+      </footer>
     </div>
   );
 }
